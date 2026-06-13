@@ -1,46 +1,20 @@
 import { Icons } from "@/components/icons";
 import { TaskRow } from "@/features/content-plan/components/TaskRow";
+import { IdeaHero } from "@/features/content-plan/components/IdeaHero";
 import {
   CompletedBanner,
   LockedDay,
   RestDay,
 } from "@/features/content-plan/components/DayStates";
-import { GROUPS, IDEA, type MonthDay, type Task } from "@/features/content-plan/data";
+import { GROUPS, PLAN, type MonthDay, type Task } from "@/features/content-plan/data";
 
-function Eyebrow({
-  children,
-  accent,
-  icon = false,
-}: {
-  children: string;
-  accent: string;
-  icon?: boolean;
-}) {
+function Eyebrow({ children, accent }: { children: string; accent: string }) {
   return (
-    <span
-      className="inline-flex items-center gap-1.5 font-ui text-[11.5px] font-extrabold uppercase tracking-[0.06em]"
+    <div
+      className="mb-[18px] font-ui text-[11.5px] font-extrabold uppercase tracking-[0.06em]"
       style={{ color: accent }}
     >
-      {icon && <Icons.sparkle size={13} />}
       {children}
-    </span>
-  );
-}
-
-function IdeaHeader({ title, desc }: { title: string; desc: string }) {
-  return (
-    <div className="mb-7">
-      <Eyebrow accent="var(--color-lime)" icon>
-        Idea of the day
-      </Eyebrow>
-      <h2 className="mt-3.5 max-w-[820px] font-display text-[clamp(24px,2.3vw,30px)] font-bold leading-[1.18] text-balance text-fg">
-        {title}
-      </h2>
-      {desc && (
-        <p className="mt-2.5 max-w-[760px] font-ui text-[15.5px] font-medium leading-relaxed text-fg-muted">
-          {desc}
-        </p>
-      )}
     </div>
   );
 }
@@ -55,8 +29,13 @@ function SectionHeader({
   accent: string;
 }) {
   return (
-    <div className="mb-[18px] mt-1.5">
-      <Eyebrow accent={accent}>{eyebrow}</Eyebrow>
+    <div className="mb-[18px] mt-8">
+      <span
+        className="font-ui text-[11.5px] font-extrabold uppercase tracking-[0.06em]"
+        style={{ color: accent }}
+      >
+        {eyebrow}
+      </span>
       <h2 className="mt-2 font-display text-[clamp(22px,2vw,26px)] font-bold leading-tight text-fg">
         {title}
       </h2>
@@ -64,14 +43,12 @@ function SectionHeader({
   );
 }
 
-function DayPlan({
-  idea,
+function TaskGroups({
   doneMap,
   readOnly,
   onToggle,
   onOpen,
 }: {
-  idea: { title: string; desc: string };
   doneMap: Record<string, boolean>;
   readOnly: boolean;
   onToggle: (id: string) => void;
@@ -80,7 +57,7 @@ function DayPlan({
   const isDone = (t: Task) => (readOnly ? true : !!doneMap[t.id]);
   return (
     <div>
-      <IdeaHeader title={idea.title} desc={idea.desc} />
+      <Eyebrow accent="var(--color-fg-subtle)">Create &amp; publish</Eyebrow>
       {GROUPS[0].tasks.map((t) => (
         <TaskRow
           key={t.id}
@@ -91,12 +68,7 @@ function DayPlan({
           onOpen={onOpen}
         />
       ))}
-      <div className="h-3.5" />
-      <SectionHeader
-        eyebrow={GROUPS[1].eyebrow}
-        title={GROUPS[1].title}
-        accent={GROUPS[1].accent}
-      />
+      <SectionHeader eyebrow={GROUPS[1].eyebrow} title={GROUPS[1].title} accent={GROUPS[1].accent} />
       {GROUPS[1].tasks.map((t) => (
         <TaskRow
           key={t.id}
@@ -116,6 +88,7 @@ export function DayBody({
   dayMeta,
   isToday,
   doneMap,
+  progress,
   onToggle,
   onOpen,
   onUnlock,
@@ -124,32 +97,32 @@ export function DayBody({
   dayMeta: MonthDay | undefined;
   isToday: boolean;
   doneMap: Record<string, boolean>;
+  progress: { done: number; total: number };
   onToggle: (id: string) => void;
   onOpen: (task: Task) => void;
   onUnlock: () => void;
 }) {
   if (isToday) {
     return (
-      <DayPlan
-        idea={{ title: IDEA.title, desc: IDEA.desc }}
-        doneMap={doneMap}
-        readOnly={false}
-        onToggle={onToggle}
-        onOpen={onOpen}
-      />
+      <div>
+        <IdeaHero done={progress.done} total={progress.total} taskCount={PLAN.length} />
+        <TaskGroups doneMap={doneMap} readOnly={false} onToggle={onToggle} onOpen={onOpen} />
+      </div>
     );
   }
   if (dayMeta?.status === "done") {
     return (
       <div>
         <CompletedBanner date={selected} />
-        <DayPlan
-          idea={{ title: dayMeta.idea ?? "", desc: "" }}
-          doneMap={doneMap}
-          readOnly
-          onToggle={onToggle}
-          onOpen={onOpen}
-        />
+        <div className="mb-7">
+          <span className="inline-flex items-center gap-1.5 font-ui text-[11.5px] font-extrabold uppercase tracking-[0.04em] text-fg-subtle">
+            <Icons.sparkle size={13} /> That day's idea
+          </span>
+          <h2 className="mt-2.5 max-w-[760px] font-display text-[clamp(22px,2.1vw,28px)] font-bold leading-snug text-fg">
+            {dayMeta.idea}
+          </h2>
+        </div>
+        <TaskGroups doneMap={doneMap} readOnly onToggle={onToggle} onOpen={onOpen} />
       </div>
     );
   }

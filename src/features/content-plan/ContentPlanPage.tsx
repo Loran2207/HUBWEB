@@ -4,7 +4,6 @@ import {
   CalendarPanel,
   type CalendarView,
 } from "@/features/content-plan/components/Calendar";
-import { ProgressChip } from "@/features/content-plan/components/ProgressChip";
 import { DayBody } from "@/features/content-plan/components/DayBody";
 import { TaskDetail } from "@/features/content-plan/components/TaskDetail";
 import { Paywall } from "@/features/content-plan/components/Paywall";
@@ -25,7 +24,7 @@ export function ContentPlanPage() {
   const week = useMemo(() => weekFor(weekOffset), [weekOffset]);
   const dayMeta = MONTH.find((d) => d.date === selected);
   const isToday = selected === TODAY;
-  const doneCount = PLAN.filter((t) => doneMap[t.id]).length;
+  const progress = { done: PLAN.filter((t) => doneMap[t.id]).length, total: PLAN.length };
 
   const toggle = (id: string) => setDoneMap((m) => ({ ...m, [id]: !m[id] }));
 
@@ -41,10 +40,11 @@ export function ContentPlanPage() {
   return (
     <div>
       <ScreenHeader
-        title="Content Plan"
+        title="Content"
+        accentWord="Plan"
         subtitle="Your daily roadmap to create, post and grow — one task at a time."
         hero
-        right={isToday ? <ProgressChip done={doneCount} total={PLAN.length} /> : undefined}
+        orb
       />
 
       <CalendarPanel
@@ -64,6 +64,7 @@ export function ContentPlanPage() {
         dayMeta={dayMeta}
         isToday={isToday}
         doneMap={doneMap}
+        progress={progress}
         onToggle={toggle}
         onOpen={setOpenTask}
         onUnlock={() => setPaywallOpen(true)}

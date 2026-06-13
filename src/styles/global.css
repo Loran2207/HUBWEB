@@ -185,3 +185,18 @@ button {
 .cp-spin {
   animation: cp-spin 0.9s linear infinite;
 }
+
+/* iridescent heading word (horizontal sweep, like "Explore Templates") */
+@utility text-irid-h {
+  background-image: linear-gradient(
+    100deg,
+    #4ee7ff 0%,
+    #83f3e0 34%,
+    #b8ffc1 60%,
+    #fae68e 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}

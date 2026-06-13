@@ -64,19 +64,28 @@ export function TaskRow({
       onClick={() => onOpen(task)}
       onKeyDown={(e) => e.key === "Enter" && onOpen(task)}
       className={cn(
-        "group mb-4 flex cursor-pointer items-start gap-5 rounded-card border-[0.5px] bg-ink-700 px-6 py-[22px]",
+        "group relative mb-4 flex cursor-pointer items-start gap-5 overflow-hidden rounded-card border-[0.5px] bg-ink-700 px-6 py-[22px]",
         "border-white/10 transition-all hover:-translate-y-0.5 hover:border-white/20",
         done && !readOnly && "opacity-80",
       )}
     >
+      {/* faint accent glow keyed to the task type */}
       <span
-        className="grid size-[54px] shrink-0 place-items-center rounded-[15px] border-[0.5px] border-white/10 bg-ink-800"
+        aria-hidden
+        className="pointer-events-none absolute -left-10 -top-12 size-44 rounded-full opacity-70 blur-[40px]"
+        style={{
+          background: `radial-gradient(circle, color-mix(in srgb, ${task.accent} 16%, transparent), transparent 65%)`,
+        }}
+      />
+
+      <span
+        className="relative grid size-[54px] shrink-0 place-items-center rounded-[15px] border-[0.5px] border-white/10 bg-ink-800"
         style={{ color: task.accent }}
       >
         <TaskGlyph name={task.glyph} size={24} />
       </span>
 
-      <div className="min-w-0 flex-1">
+      <div className="relative min-w-0 flex-1">
         <h4
           className={cn(
             "mb-1.5 mt-0.5 font-display text-[19px] font-bold leading-tight text-fg",
