@@ -1,0 +1,187 @@
+@import "tailwindcss";
+
+/* ============================================================
+   FONTS — real Gilroy (self-hosted), Montserrat (wordmark, via <link>)
+   ============================================================ */
+@font-face {
+  font-family: "Gilroy";
+  src: url("/fonts/Gilroy-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Gilroy";
+  src: url("/fonts/Gilroy-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Gilroy";
+  src: url("/fonts/Gilroy-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Gilroy";
+  src: url("/fonts/Gilroy-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Gilroy";
+  src: url("/fonts/Gilroy-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Gilroy";
+  src: url("/fonts/Gilroy-ExtraBold.ttf") format("truetype");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Gilroy";
+  src: url("/fonts/Gilroy-Heavy.ttf") format("truetype");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ============================================================
+   DESIGN TOKENS — extracted from the real HUB WEB Figma
+   (NOT the prototype CSS; values corrected against the file)
+   ============================================================ */
+@theme {
+  /* fonts */
+  --font-display: "Gilroy", "Manrope", system-ui, sans-serif;
+  --font-ui: "Gilroy", "Manrope", system-ui, sans-serif;
+  --font-logo: "Montserrat", "Gilroy", system-ui, sans-serif;
+  --font-user: "Helvetica Neue", Arial, sans-serif;
+
+  /* core neutrals — dark is canonical */
+  --color-canvas: #000000;
+  --color-ink-900: #0a0a0a;
+  --color-ink-800: #141414;
+  --color-ink-700: #1a1a1a;
+  --color-tile: #292929;
+  --color-tile-hi: #333333;
+
+  /* text */
+  --color-fg: #ffffff;
+  --color-fg-muted: #b3b3b3;
+  --color-fg-subtle: rgba(255, 255, 255, 0.5);
+  --color-fg-faint: rgba(255, 255, 255, 0.3);
+  --color-on-lime: #0a0a0a;
+
+  /* brand / accents (real Figma values) */
+  --color-lime: #b8e644;
+  --color-lime-600: #a6d52f;
+  --color-lime-700: #93c020;
+  --color-blue: #00a6ff; /* real "Unlock" blue — NOT #2377f8 */
+  --color-purple: #c34dff;
+  --color-purple-700: #752e99;
+  --color-sky: #1ab2ff;
+  --color-teal: #3cc6aa;
+  --color-green: #16c784;
+  --color-gold: #fdd732;
+  --color-amber: #ffb12a;
+  --color-orange: #fc9139;
+  --color-pink: #ff4d6d;
+  --color-danger: #f0402c;
+
+  /* iridescent gradient stops (hero / active-nav text) */
+  --color-irid-1: #4ee7ff;
+  --color-irid-2: #83f3e0;
+  --color-irid-3: #b8ffc1;
+  --color-irid-4: #fae68e;
+
+  /* radii */
+  --radius-tile: 8px;
+  --radius-input: 12px;
+  --radius-card: 16px;
+  --radius-btn: 20px;
+  --radius-modal: 24px;
+
+  /* glass blur (Figma uses 250px; 80px reads the same over near-black) */
+  --blur-glass: 80px;
+}
+
+/* iridescent gradient utilities (radial, cyan -> aqua -> mint -> warm) */
+@utility text-irid {
+  background-image: radial-gradient(
+    120% 140% at 12% 18%,
+    var(--color-irid-1) 0%,
+    var(--color-irid-2) 28%,
+    var(--color-irid-3) 55%,
+    var(--color-irid-4) 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+:root {
+  color-scheme: dark;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-canvas);
+  color: var(--color-fg);
+  font-family: var(--font-ui);
+  font-weight: 500;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+button {
+  font-family: inherit;
+}
+
+/* thin glass scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.22);
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::selection {
+  background: rgba(184, 230, 68, 0.28);
+}
+
+/* generating spinner */
+@keyframes cp-spin {
+  to { transform: rotate(360deg); }
+}
+.cp-spin {
+  animation: cp-spin 0.9s linear infinite;
+}
