@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ScreenHeader } from "@/components/ScreenHeader";
 import {
   CalendarPanel,
@@ -25,7 +25,38 @@ export function ContentPlanPage() {
     Object.fromEntries(PLAN.map((t) => [t.id, t.done])),
   );
   const [openTask, setOpenTask] = useState<Task | null>(null);
+  const [forceRegen, setForceRegen] = useState(false);
   const [paywallOpen, setPaywallOpen] = useState(false);
+
+  // Deep-link each state for design capture: /?state=video|month|paywall|...
+  useEffect(() => {
+    const s = new URLSearchParams(window.location.search).get("state");
+    if (!s) return;
+    setOpenTask(null);
+    setPaywallOpen(false);
+    setForceRegen(false);
+    if (s === "month") setView("month");
+    else if (s === "completed") {
+      setView("week");
+      setSelected(26);
+    } else if (s === "locked") {
+      setView("week");
+      setSelected(29);
+    } else if (s === "rest") {
+      setView("week");
+      setSelected(25);
+    } else if (s === "video") setOpenTask(PLAN[0]);
+    else if (s === "post") setOpenTask(PLAN[1]);
+    else if (s === "engage") setOpenTask(PLAN[2]);
+    else if (s === "regen") {
+      setOpenTask(PLAN[0]);
+      setForceRegen(true);
+    } else if (s === "paywall") setPaywallOpen(true);
+    else {
+      setView("week");
+      setSelected(TODAY);
+    }
+  }, []);
 
   const week = useMemo(() => weekFor(weekOffset), [weekOffset]);
   const dayMeta = MONTH.find((d) => d.date === selected);
@@ -37,7 +68,7 @@ export function ContentPlanPage() {
   if (openTask) {
     return (
       <>
-        <TaskDetail task={openTask} onBack={() => setOpenTask(null)} />
+        <TaskDetail task={openTask} onBack={() => setOpenTask(null)} forceRegen={forceRegen} />
         <Paywall open={paywallOpen} onOpenChange={setPaywallOpen} />
       </>
     );
