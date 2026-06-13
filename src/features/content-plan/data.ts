@@ -16,6 +16,7 @@ export type DayStatus =
 
 export interface Task {
   readonly id: string;
+  readonly illo?: string;
   readonly kind: TaskKind;
   readonly step: string;
   readonly glyph: GlyphName;
@@ -35,6 +36,7 @@ export interface Task {
 
 export interface PlanGroup {
   readonly id: string;
+  readonly illo?: string;
   readonly eyebrow: string;
   readonly title: string;
   /** CSS custom-property reference for the section accent. */
@@ -63,6 +65,7 @@ export const IDEA = {
 
 const TASK_VIDEO: Task = {
   id: "video",
+  illo: "video",
   kind: "video",
   step: "Create",
   glyph: "film",
@@ -82,6 +85,7 @@ const TASK_VIDEO: Task = {
 
 const TASK_POST: Task = {
   id: "post",
+  illo: "post",
   kind: "post",
   step: "Publish",
   glyph: "edit",
@@ -96,6 +100,7 @@ const TASK_POST: Task = {
 
 const TASK_ENGAGE: Task = {
   id: "engage",
+  illo: "engage",
   kind: "engage",
   step: "Grow",
   glyph: "message",

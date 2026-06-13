@@ -44,6 +44,33 @@ function Toggle({
   );
 }
 
+function TaskArt({ task }: { task: Task }) {
+  return (
+    <span className="relative grid size-[84px] shrink-0 place-items-center overflow-hidden rounded-[18px] border-[0.5px] border-white/10 bg-ink-800">
+      <span
+        aria-hidden
+        className="absolute inset-0"
+        style={{
+          background: `radial-gradient(circle at 50% 42%, color-mix(in srgb, ${task.accent} 26%, transparent), transparent 70%)`,
+        }}
+      />
+      {task.illo ? (
+        <img
+          src={`/illos/${task.illo}.webp`}
+          alt=""
+          aria-hidden
+          draggable={false}
+          className="relative size-[74px] object-contain drop-shadow-[0_8px_18px_rgba(0,0,0,0.45)]"
+        />
+      ) : (
+        <span className="relative" style={{ color: task.accent }}>
+          <TaskGlyph name={task.glyph} size={28} />
+        </span>
+      )}
+    </span>
+  );
+}
+
 export function TaskRow({
   task,
   done,
@@ -64,54 +91,38 @@ export function TaskRow({
       onClick={() => onOpen(task)}
       onKeyDown={(e) => e.key === "Enter" && onOpen(task)}
       className={cn(
-        "group relative mb-4 flex cursor-pointer items-start gap-5 overflow-hidden rounded-card border-[0.5px] bg-ink-700 px-6 py-[22px]",
+        "group mb-4 flex cursor-pointer items-center gap-5 rounded-card border-[0.5px] bg-ink-700 px-5 py-5",
         "border-white/10 transition-all hover:-translate-y-0.5 hover:border-white/20",
         done && !readOnly && "opacity-80",
       )}
     >
-      {/* faint accent glow keyed to the task type */}
-      <span
-        aria-hidden
-        className="pointer-events-none absolute -left-10 -top-12 size-44 rounded-full opacity-70 blur-[40px]"
-        style={{
-          background: `radial-gradient(circle, color-mix(in srgb, ${task.accent} 16%, transparent), transparent 65%)`,
-        }}
-      />
+      <TaskArt task={task} />
 
-      <span
-        className="relative grid size-[54px] shrink-0 place-items-center rounded-[15px] border-[0.5px] border-white/10 bg-ink-800"
-        style={{ color: task.accent }}
-      >
-        <TaskGlyph name={task.glyph} size={24} />
-      </span>
-
-      <div className="relative min-w-0 flex-1">
+      <div className="min-w-0 flex-1">
         <h4
           className={cn(
-            "mb-1.5 mt-0.5 font-display text-[19px] font-bold leading-tight text-fg",
+            "mb-1.5 font-display text-[19px] font-bold leading-tight text-fg",
             done && "line-through decoration-fg-faint",
           )}
         >
           {task.title}
         </h4>
-        <p className="mb-4 max-w-[720px] font-ui text-[14.5px] font-medium leading-normal text-fg-muted">
+        <p className="mb-3.5 max-w-[660px] font-ui text-[14.5px] font-medium leading-normal text-fg-muted">
           {task.desc}
         </p>
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex flex-wrap items-center gap-3">
-            <PlatformRow platforms={task.platforms} size={20} />
-            {task.format && (
-              <span className="inline-flex items-center gap-1.5 rounded-full border-[0.5px] border-white/10 bg-white/5 px-[11px] py-[5px] font-ui text-[12.5px] font-semibold text-fg">
-                🗣️ {task.format}
-              </span>
-            )}
-            <span className="font-ui text-[12.5px] font-medium text-fg-subtle">{task.eta}</span>
-          </div>
-          <span className="inline-flex items-center gap-1.5 whitespace-nowrap font-ui text-[13px] font-bold text-fg-subtle transition-colors group-hover:text-lime">
-            Open <Icons.chevronRight size={16} />
-          </span>
+        <div className="flex items-center gap-3">
+          <PlatformRow platforms={task.platforms} size={20} />
+          {task.format && (
+            <span className="inline-flex items-center gap-1.5 rounded-full border-[0.5px] border-white/10 bg-white/5 px-[11px] py-[5px] font-ui text-[12.5px] font-semibold text-fg">
+              🗣️ {task.format}
+            </span>
+          )}
         </div>
       </div>
+
+      <span className="hidden shrink-0 items-center gap-1.5 self-end whitespace-nowrap font-ui text-[13px] font-bold text-fg-subtle transition-colors group-hover:text-lime sm:inline-flex">
+        Open <Icons.chevronRight size={16} />
+      </span>
 
       <Toggle done={done} readOnly={readOnly} onToggle={onToggle} />
     </div>
