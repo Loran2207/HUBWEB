@@ -56,7 +56,7 @@ export function ContentPlanPage() {
 
   let dayLayout = body;
   if (layout === "focused") {
-    dayLayout = <div className="mx-auto max-w-[900px]">{body}</div>;
+    dayLayout = body;
   } else if (layout === "rail") {
     dayLayout = (
       <div className="grid grid-cols-1 items-start gap-8 xl:grid-cols-[minmax(0,1fr)_360px]">

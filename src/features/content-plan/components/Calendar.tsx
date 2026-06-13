@@ -12,13 +12,8 @@ import {
 
 export type CalendarView = "week" | "month";
 
+/** The calendar only signals done / not-done (+ today). No moon / lock. */
 function StatusMark({ status, onLime }: { status: DayStatus; onLime: boolean }) {
-  if (status === "done")
-    return (
-      <span className="grid size-6 place-items-center rounded-full bg-teal/15 text-teal">
-        <Icons.check size={14} strokeWidth={2.6} />
-      </span>
-    );
   if (status === "today")
     return (
       <span
@@ -30,10 +25,13 @@ function StatusMark({ status, onLime }: { status: DayStatus; onLime: boolean }) 
         2 / 3
       </span>
     );
-  if (status === "rest") return <span className="text-[13px] opacity-70">🌙</span>;
-  if (status === "upcoming" || status === "locked")
-    return <Icons.lock size={13} className="text-fg-faint" />;
-  return <span className="size-1.5 rounded-full bg-fg-faint" />;
+  if (status === "done")
+    return (
+      <span className="grid size-[22px] place-items-center rounded-full bg-teal/15 text-teal ring-[0.5px] ring-teal/40">
+        <Icons.check size={13} strokeWidth={2.6} />
+      </span>
+    );
+  return <span className="size-[22px] rounded-full border-[1.5px] border-white/15" />;
 }
 
 function DayCell({
@@ -46,17 +44,18 @@ function DayCell({
   onSelect: () => void;
 }) {
   const isToday = day.status === "today";
+  const isDone = day.status === "done";
   const limeSel = selected && isToday;
   if (day.status === "out") {
     return (
-      <span className="flex flex-col items-center gap-3 px-2 pb-3.5 pt-4 opacity-30">
+      <span className="flex flex-col items-center gap-3 px-2 pb-3.5 pt-4 opacity-25">
         <span className="font-logo text-xs font-bold uppercase tracking-wider text-fg-subtle">
           {day.dow}
         </span>
         <span className="font-display text-3xl font-bold leading-none text-fg-faint">
           {day.date}
         </span>
-        <span className="size-1.5" />
+        <span className="size-[22px]" />
       </span>
     );
   }
@@ -64,13 +63,15 @@ function DayCell({
     <button
       onClick={onSelect}
       className={cn(
-        "flex flex-col items-center gap-3 px-2 pb-3.5 pt-4 transition-all",
+        "flex flex-col items-center gap-3 overflow-hidden px-2 pb-3.5 pt-4 transition-all",
         "rounded-card border-[0.5px]",
         limeSel
           ? "border-transparent bg-lime shadow-[0_8px_28px_rgba(184,230,68,0.25)]"
           : selected
-            ? "border-transparent bg-white/10"
-            : "border-white/10 hover:-translate-y-0.5 hover:bg-white/5",
+            ? "border-white/15 bg-white/10"
+            : isDone
+              ? "border-teal/15 bg-teal/[0.04] hover:-translate-y-0.5 hover:bg-teal/[0.07]"
+              : "border-white/10 hover:-translate-y-0.5 hover:bg-white/5",
       )}
     >
       <span
@@ -106,12 +107,7 @@ function WeekStrip({
   return (
     <div className="grid grid-cols-7 gap-2.5">
       {week.map((d) => (
-        <DayCell
-          key={d.date}
-          day={d}
-          selected={selected === d.date}
-          onSelect={() => onSelect(d.date)}
-        />
+        <DayCell key={d.date} day={d} selected={selected === d.date} onSelect={() => onSelect(d.date)} />
       ))}
     </div>
   );
@@ -127,25 +123,20 @@ function MonthCell({
   onSelect: () => void;
 }) {
   const isToday = d.status === "today";
+  const isDone = d.status === "done";
   const limeSel = selected && isToday;
-  const locked = d.status === "locked";
-  const dot =
-    d.status === "done"
-      ? "var(--color-teal)"
-      : isToday
-        ? "var(--color-lime)"
-        : "var(--color-fg-faint)";
   return (
     <button
       onClick={onSelect}
       className={cn(
-        "relative flex min-h-[104px] flex-col overflow-hidden rounded-input p-3 text-left transition-colors",
-        "border-[0.5px]",
+        "relative flex min-h-[104px] flex-col overflow-hidden rounded-input border-[0.5px] p-3 text-left transition-colors",
         limeSel
           ? "border-transparent bg-lime"
           : selected
-            ? "border-transparent bg-white/10"
-            : "border-white/10 bg-white/5 hover:bg-white/8",
+            ? "border-white/15 bg-white/10"
+            : isDone
+              ? "border-teal/12 bg-teal/[0.04] hover:bg-teal/[0.07]"
+              : "border-white/10 bg-white/5 hover:bg-white/8",
       )}
     >
       <div className="mb-2 flex items-center justify-between">
@@ -157,12 +148,7 @@ function MonthCell({
         >
           {d.date}
         </span>
-        {d.status === "done" && (
-          <span className={limeSel ? "text-on-lime" : "text-teal"}>
-            <Icons.check size={14} strokeWidth={2.6} />
-          </span>
-        )}
-        {isToday && (
+        {isToday ? (
           <span
             className={cn(
               "font-ui text-[10px] font-bold uppercase tracking-wide",
@@ -171,29 +157,33 @@ function MonthCell({
           >
             Today
           </span>
-        )}
-        {locked && <Icons.lock size={13} className="text-fg-faint" />}
-        {d.status === "rest" && <span className="text-xs opacity-70">🌙</span>}
+        ) : isDone ? (
+          <span className="grid size-[18px] place-items-center rounded-full bg-teal/15 text-teal">
+            <Icons.check size={11} strokeWidth={2.6} />
+          </span>
+        ) : null}
       </div>
       {d.idea && (
         <span
           className={cn(
             "line-clamp-3 font-ui text-[11.5px] font-medium leading-snug",
-            limeSel ? "text-on-lime/80" : "text-fg-muted",
-            locked && "select-none blur-[3.5px]",
+            limeSel ? "text-on-lime/80" : isDone ? "text-fg-muted" : "text-fg-subtle",
           )}
         >
           {d.idea}
         </span>
       )}
-      {d.tasks > 0 && !locked && (
+      {d.tasks > 0 && (
         <span
           className={cn(
             "mt-auto inline-flex items-center gap-1.5 pt-2 font-ui text-[10.5px] font-semibold",
             limeSel ? "text-on-lime/60" : "text-fg-subtle",
           )}
         >
-          <span className="size-[5px] rounded-full" style={{ background: dot }} />
+          <span
+            className="size-[5px] rounded-full"
+            style={{ background: isDone ? "var(--color-teal)" : isToday ? "var(--color-lime)" : "var(--color-fg-faint)" }}
+          />
           {d.tasks} tasks
         </span>
       )}
@@ -228,12 +218,7 @@ function MonthGrid({
           <span key={`pad-${i}`} />
         ))}
         {month.map((d) => (
-          <MonthCell
-            key={d.date}
-            d={d}
-            selected={selected === d.date}
-            onSelect={() => onSelect(d.date)}
-          />
+          <MonthCell key={d.date} d={d} selected={selected === d.date} onSelect={() => onSelect(d.date)} />
         ))}
       </div>
     </div>
@@ -265,6 +250,28 @@ function ArrowButton({
   );
 }
 
+function Segmented({ view, onView }: { view: CalendarView; onView: (v: CalendarView) => void }) {
+  const [hover, setHover] = useState<CalendarView | null>(null);
+  return (
+    <div className="flex rounded-full border-[0.5px] border-white/10 bg-white/5 p-[3px]">
+      {(["week", "month"] as const).map((v) => (
+        <button
+          key={v}
+          onClick={() => onView(v)}
+          onMouseEnter={() => setHover(v)}
+          onMouseLeave={() => setHover(null)}
+          className={cn(
+            "rounded-full px-[18px] py-[7px] font-ui text-[13px] font-bold capitalize transition-colors",
+            view === v ? "bg-white/10 text-fg" : hover === v ? "text-fg" : "text-fg-subtle",
+          )}
+        >
+          {v}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 export function CalendarPanel({
   week,
   month,
@@ -289,8 +296,9 @@ export function CalendarPanel({
   const canPrev = view === "week" && weekOffset > -4;
   const canNext = view === "week" && weekOffset < 0;
   return (
-    <section className="mb-6 rounded-card border-[0.5px] border-white/10 bg-white/5 p-5">
-      <div className="mb-[18px] flex flex-wrap items-center justify-between gap-3">
+    <section className="relative mb-6 overflow-hidden rounded-card border-[0.5px] border-white/10 bg-white/[0.03] p-5">
+      <div className="pointer-events-none absolute -right-10 -top-16 size-[280px] rounded-full bg-[radial-gradient(circle,rgba(184,230,68,0.06),transparent_64%)] blur-[60px]" />
+      <div className="relative mb-[18px] flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-baseline gap-3">
           <h2 className="font-display text-[22px] font-bold text-fg">{MONTH_LABEL}</h2>
           <span className="font-ui text-[15px] font-semibold text-fg-subtle">{YEAR_LABEL}</span>
@@ -303,43 +311,13 @@ export function CalendarPanel({
           </div>
         </div>
       </div>
-      {view === "week" ? (
-        <WeekStrip week={week} selected={selected} onSelect={onSelect} />
-      ) : (
-        <MonthGrid month={month} selected={selected} onSelect={onSelect} />
-      )}
+      <div className="relative">
+        {view === "week" ? (
+          <WeekStrip week={week} selected={selected} onSelect={onSelect} />
+        ) : (
+          <MonthGrid month={month} selected={selected} onSelect={onSelect} />
+        )}
+      </div>
     </section>
-  );
-}
-
-function Segmented({
-  view,
-  onView,
-}: {
-  view: CalendarView;
-  onView: (v: CalendarView) => void;
-}) {
-  const [hover, setHover] = useState<CalendarView | null>(null);
-  return (
-    <div className="flex rounded-full border-[0.5px] border-white/10 bg-white/5 p-[3px]">
-      {(["week", "month"] as const).map((v) => (
-        <button
-          key={v}
-          onClick={() => onView(v)}
-          onMouseEnter={() => setHover(v)}
-          onMouseLeave={() => setHover(null)}
-          className={cn(
-            "rounded-full px-[18px] py-[7px] font-ui text-[13px] font-bold capitalize transition-colors",
-            view === v
-              ? "bg-white/10 text-fg"
-              : hover === v
-                ? "text-fg"
-                : "text-fg-subtle",
-          )}
-        >
-          {v}
-        </button>
-      ))}
-    </div>
   );
 }
