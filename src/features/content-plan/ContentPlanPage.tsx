@@ -30,6 +30,7 @@ export function ContentPlanPage() {
   const week = useMemo(() => weekFor(weekOffset), [weekOffset]);
   const dayMeta = MONTH.find((d) => d.date === selected);
   const isToday = selected === TODAY;
+  const isMonth = view === "month";
 
   const toggle = (id: string) => setDoneMap((m) => ({ ...m, [id]: !m[id] }));
 
@@ -55,9 +56,7 @@ export function ContentPlanPage() {
   );
 
   let dayLayout = body;
-  if (layout === "focused") {
-    dayLayout = body;
-  } else if (layout === "rail") {
+  if (layout === "rail") {
     dayLayout = (
       <div className="grid grid-cols-1 items-start gap-8 xl:grid-cols-[minmax(0,1fr)_360px]">
         <div className="max-w-[880px]">{body}</div>
@@ -67,7 +66,7 @@ export function ContentPlanPage() {
   }
 
   return (
-    <div>
+    <div className={isMonth ? "flex h-full flex-col pb-2" : undefined}>
       <ScreenHeader
         title="Content"
         accentWord="Plan"
@@ -82,15 +81,18 @@ export function ContentPlanPage() {
         selected={selected}
         view={view}
         weekOffset={weekOffset}
+        fill={isMonth}
         onView={setView}
-        onSelect={(d) => { setSelected(d); if (view === "month") setView("week"); }}
+        onSelect={(d) => {
+          setSelected(d);
+          if (isMonth) setView("week");
+        }}
         onPrevWeek={() => setWeekOffset((o) => Math.max(o - 1, -4))}
         onNextWeek={() => setWeekOffset((o) => Math.min(o + 1, 0))}
       />
 
-      {view !== "month" && dayLayout}
-
-      {view !== "month" && <LayoutSwitcher value={layout} onChange={setLayout} />}
+      {!isMonth && dayLayout}
+      {!isMonth && <LayoutSwitcher value={layout} onChange={setLayout} />}
       <Paywall open={paywallOpen} onOpenChange={setPaywallOpen} />
     </div>
   );

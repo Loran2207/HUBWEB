@@ -12,7 +12,7 @@ import {
 
 export type CalendarView = "week" | "month";
 
-/** The calendar only signals done / not-done (+ today). No moon / lock. */
+/** The calendar only signals done / not-done (+ today). No moon / lock / counts. */
 function StatusMark({ status, onLime }: { status: DayStatus; onLime: boolean }) {
   if (status === "today")
     return (
@@ -49,12 +49,8 @@ function DayCell({
   if (day.status === "out") {
     return (
       <span className="flex flex-col items-center gap-3 px-2 pb-3.5 pt-4 opacity-25">
-        <span className="font-logo text-xs font-bold uppercase tracking-wider text-fg-subtle">
-          {day.dow}
-        </span>
-        <span className="font-display text-3xl font-bold leading-none text-fg-faint">
-          {day.date}
-        </span>
+        <span className="font-logo text-xs font-bold uppercase tracking-wider text-fg-subtle">{day.dow}</span>
+        <span className="font-display text-3xl font-bold leading-none text-fg-faint">{day.date}</span>
         <span className="size-[22px]" />
       </span>
     );
@@ -63,8 +59,7 @@ function DayCell({
     <button
       onClick={onSelect}
       className={cn(
-        "flex flex-col items-center gap-3 overflow-hidden px-2 pb-3.5 pt-4 transition-all",
-        "rounded-card border-[0.5px]",
+        "flex flex-col items-center gap-3 overflow-hidden px-2 pb-3.5 pt-4 transition-all rounded-card border-[0.5px]",
         limeSel
           ? "border-transparent bg-lime shadow-[0_8px_28px_rgba(184,230,68,0.25)]"
           : selected
@@ -74,12 +69,7 @@ function DayCell({
               : "border-white/10 hover:-translate-y-0.5 hover:bg-white/5",
       )}
     >
-      <span
-        className={cn(
-          "font-logo text-xs font-bold uppercase tracking-wider",
-          limeSel ? "text-on-lime/65" : "text-fg-subtle",
-        )}
-      >
+      <span className={cn("font-logo text-xs font-bold uppercase tracking-wider", limeSel ? "text-on-lime/65" : "text-fg-subtle")}>
         {day.dow}
       </span>
       <span
@@ -129,7 +119,7 @@ function MonthCell({
     <button
       onClick={onSelect}
       className={cn(
-        "relative flex min-h-[156px] flex-col overflow-hidden rounded-input border-[0.5px] p-3 text-left transition-colors",
+        "relative flex h-full min-h-[140px] flex-col overflow-hidden rounded-input border-[0.5px] p-3.5 text-left transition-colors",
         limeSel
           ? "border-transparent bg-lime"
           : selected
@@ -139,22 +129,12 @@ function MonthCell({
               : "border-white/10 bg-white/5 hover:bg-white/8",
       )}
     >
-      <div className="mb-2 flex items-center justify-between">
-        <span
-          className={cn(
-            "font-display text-lg font-bold",
-            limeSel ? "text-on-lime" : isToday ? "text-lime" : "text-fg",
-          )}
-        >
+      <div className="mb-2.5 flex items-center justify-between">
+        <span className={cn("font-display text-lg font-bold", limeSel ? "text-on-lime" : isToday ? "text-lime" : "text-fg")}>
           {d.date}
         </span>
         {isToday ? (
-          <span
-            className={cn(
-              "font-ui text-[10px] font-bold uppercase tracking-wide",
-              limeSel ? "text-on-lime/70" : "text-lime",
-            )}
-          >
+          <span className={cn("font-ui text-[10px] font-bold uppercase tracking-wide", limeSel ? "text-on-lime/70" : "text-lime")}>
             Today
           </span>
         ) : isDone ? (
@@ -173,20 +153,6 @@ function MonthCell({
           {d.idea}
         </span>
       )}
-      {d.tasks > 0 && (
-        <span
-          className={cn(
-            "mt-auto inline-flex items-center gap-1.5 pt-2 font-ui text-[10.5px] font-semibold",
-            limeSel ? "text-on-lime/60" : "text-fg-subtle",
-          )}
-        >
-          <span
-            className="size-[5px] rounded-full"
-            style={{ background: isDone ? "var(--color-teal)" : isToday ? "var(--color-lime)" : "var(--color-fg-faint)" }}
-          />
-          {d.tasks} tasks
-        </span>
-      )}
     </button>
   );
 }
@@ -195,25 +161,24 @@ function MonthGrid({
   month,
   selected,
   onSelect,
+  fill,
 }: {
   month: readonly MonthDay[];
   selected: number;
   onSelect: (d: number) => void;
+  fill?: boolean;
 }) {
   const dows = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   return (
-    <div>
+    <div className={cn("flex flex-col", fill && "min-h-0 flex-1")}>
       <div className="mb-2.5 grid grid-cols-7 gap-2.5">
         {dows.map((d) => (
-          <span
-            key={d}
-            className="pl-1 text-left font-logo text-[11px] font-bold uppercase tracking-wide text-fg-subtle"
-          >
+          <span key={d} className="pl-1 text-left font-logo text-[11px] font-bold uppercase tracking-wide text-fg-subtle">
             {d}
           </span>
         ))}
       </div>
-      <div className="grid grid-cols-7 gap-2.5">
+      <div className={cn("grid grid-cols-7 gap-2.5", fill && "min-h-0 flex-1 auto-rows-fr")}>
         {Array.from({ length: FIRST_WEEKDAY }).map((_, i) => (
           <span key={`pad-${i}`} />
         ))}
@@ -225,15 +190,7 @@ function MonthGrid({
   );
 }
 
-function ArrowButton({
-  dir,
-  enabled,
-  onClick,
-}: {
-  dir: "prev" | "next";
-  enabled: boolean;
-  onClick: () => void;
-}) {
+function ArrowButton({ dir, enabled, onClick }: { dir: "prev" | "next"; enabled: boolean; onClick: () => void }) {
   return (
     <button
       onClick={enabled ? onClick : undefined}
@@ -282,6 +239,7 @@ export function CalendarPanel({
   onSelect,
   onPrevWeek,
   onNextWeek,
+  fill,
 }: {
   week: readonly WeekDay[];
   month: readonly MonthDay[];
@@ -292,11 +250,17 @@ export function CalendarPanel({
   onSelect: (d: number) => void;
   onPrevWeek: () => void;
   onNextWeek: () => void;
+  fill?: boolean;
 }) {
   const canPrev = view === "week" && weekOffset > -4;
   const canNext = view === "week" && weekOffset < 0;
   return (
-    <section className="relative mb-6 overflow-hidden rounded-card border-[0.5px] border-white/10 bg-white/[0.03] p-5">
+    <section
+      className={cn(
+        "relative overflow-hidden rounded-card border-[0.5px] border-white/10 bg-white/[0.03] p-5",
+        fill ? "flex min-h-0 flex-1 flex-col" : "mb-6",
+      )}
+    >
       <div className="pointer-events-none absolute -right-10 -top-16 size-[280px] rounded-full bg-[radial-gradient(circle,rgba(184,230,68,0.06),transparent_64%)] blur-[60px]" />
       <div className="relative mb-[18px] flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-baseline gap-3">
@@ -311,11 +275,11 @@ export function CalendarPanel({
           </div>
         </div>
       </div>
-      <div className="relative">
+      <div className={cn("relative", fill && "flex min-h-0 flex-1 flex-col")}>
         {view === "week" ? (
           <WeekStrip week={week} selected={selected} onSelect={onSelect} />
         ) : (
-          <MonthGrid month={month} selected={selected} onSelect={onSelect} />
+          <MonthGrid month={month} selected={selected} onSelect={onSelect} fill={fill} />
         )}
       </div>
     </section>
