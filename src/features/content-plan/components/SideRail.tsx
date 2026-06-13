@@ -1,13 +1,13 @@
-import { DecorField } from "@/components/Decor";
 import { BrandSvg, Icons } from "@/components/icons";
 import { Button } from "@/components/ui/Button";
 
-/** Right-rail composition for the "rail" layout — the iridescent gradient +
- * sparkles backdrop with a premium upsell, filling the freed space. */
+/** Right-rail composition for the "rail" layout — a clean premium upsell
+ * filling the freed space (single soft glow, no busy decoration). */
 export function SideRail({ onUnlock }: { onUnlock: () => void }) {
   return (
     <aside className="sticky top-2 hidden min-h-[460px] overflow-hidden rounded-card border-[0.5px] border-white/10 bg-white/[0.03] p-7 backdrop-blur-[var(--blur-glass)] xl:flex xl:flex-col">
-      <DecorField />
+      <div className="pointer-events-none absolute -right-10 -top-16 size-[320px] rounded-full bg-[radial-gradient(circle,rgba(184,230,68,0.14),transparent_62%)] blur-[60px]" />
+      <div className="pointer-events-none absolute -bottom-16 -left-10 size-[280px] rounded-full bg-[radial-gradient(circle,rgba(0,166,255,0.10),transparent_64%)] blur-[60px]" />
       <div className="relative flex h-full flex-col">
         <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-lime/15 px-3 py-1.5 font-ui text-[11px] font-extrabold uppercase tracking-wide text-lime">
           <BrandSvg name="crown" size={14} /> Premium

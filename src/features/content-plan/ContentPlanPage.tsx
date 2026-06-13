@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
 import { ScreenHeader } from "@/components/ScreenHeader";
-import { DecorField } from "@/components/Decor";
 import {
   CalendarPanel,
   type CalendarView,
@@ -57,14 +56,7 @@ export function ContentPlanPage() {
 
   let dayLayout = body;
   if (layout === "focused") {
-    dayLayout = (
-      <div className="relative">
-        <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-[42%] xl:block">
-          <DecorField />
-        </div>
-        <div className="relative max-w-[880px]">{body}</div>
-      </div>
-    );
+    dayLayout = <div className="mx-auto max-w-[900px]">{body}</div>;
   } else if (layout === "rail") {
     dayLayout = (
       <div className="grid grid-cols-1 items-start gap-8 xl:grid-cols-[minmax(0,1fr)_360px]">

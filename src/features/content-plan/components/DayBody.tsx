@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { ReactNode } from "react";
 import { Icons } from "@/components/icons";
 import { cn } from "@/lib/cn";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { TaskRow } from "@/features/content-plan/components/TaskRow";
 import {
   CompletedBanner,
@@ -22,7 +23,6 @@ const ALT_IDEAS = [
   },
 ];
 
-/** Shared heading — both blocks read as equivalent (eyebrow + big title). */
 function SectionHeading({
   eyebrow,
   accent,
@@ -158,7 +158,9 @@ export function DayBody({
 }) {
   const [i, setI] = useState(0);
   const [spin, setSpin] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
   const idea = ALT_IDEAS[i] ?? ALT_IDEAS[0];
+
   const regenerate = () => {
     setSpin(true);
     setTimeout(() => {
@@ -177,10 +179,19 @@ export function DayBody({
           title={idea.title}
           desc={idea.desc}
           dim={spin}
-          right={<RegenButton onClick={regenerate} spinning={spin} />}
+          right={<RegenButton onClick={() => setConfirmOpen(true)} spinning={spin} />}
         />
         <TaskList tasks={GROUPS[0].tasks} doneMap={doneMap} readOnly={false} onToggle={onToggle} onOpen={onOpen} />
         <GrowthSection doneMap={doneMap} readOnly={false} onToggle={onToggle} onOpen={onOpen} />
+
+        <ConfirmDialog
+          open={confirmOpen}
+          onOpenChange={setConfirmOpen}
+          title="Regenerate today's idea?"
+          message="We'll suggest a fresh idea and refresh your video script and post to match. Your current ones will be replaced."
+          confirmLabel="Regenerate"
+          onConfirm={regenerate}
+        />
       </div>
     );
   }

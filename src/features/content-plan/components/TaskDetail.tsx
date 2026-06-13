@@ -35,7 +35,7 @@ function MetaBadge({ icon, children }: { icon: React.ReactNode; children: React.
   );
 }
 
-function ShotBlock({
+function ShotCard({
   icon,
   label,
   accent,
@@ -48,43 +48,40 @@ function ShotBlock({
 }) {
   const Ic = icon === "eye" ? Icons.eye : Icons.message;
   return (
-    <div>
-      <div className="mb-[7px] inline-flex items-center gap-1.5" style={{ color: accent }}>
+    <div className="rounded-card border-[0.5px] border-white/10 bg-ink-700 p-4">
+      <div className="mb-2.5 inline-flex items-center gap-1.5" style={{ color: accent }}>
         <Ic size={14} />
-        <span className="font-ui text-[11px] font-extrabold uppercase tracking-[0.05em]">
-          {label}
-        </span>
+        <span className="font-ui text-[11px] font-extrabold uppercase tracking-[0.05em]">{label}</span>
       </div>
       <p className="font-ui text-[14.5px] leading-relaxed text-fg">{text}</p>
     </div>
   );
 }
 
-function SceneCard({ scene, last }: { scene: Scene; last: boolean }) {
+/** One scene = two parts split into a Visual card + a Script card. */
+function SceneBlock({ scene, last }: { scene: Scene; last: boolean }) {
   return (
-    <div className="flex items-stretch gap-[22px]">
-      <div className="flex flex-[0_0_40px] flex-col items-center">
-        <span className="z-[1] grid size-10 shrink-0 place-items-center rounded-full border-[0.5px] border-white/10 bg-ink-800 font-display text-[15px] font-bold text-fg">
+    <div className="flex gap-5">
+      <div className="flex flex-col items-center">
+        <span className="z-[1] grid size-9 shrink-0 place-items-center rounded-full border-[0.5px] border-white/10 bg-ink-800 font-display text-[14px] font-bold text-fg">
           {scene.n}
         </span>
-        {!last && <span className="-mb-[18px] w-0.5 flex-1 bg-white/20 opacity-55" />}
+        {!last && <span className="mt-1 w-px flex-1 bg-white/15" />}
       </div>
-      <div className="mb-[18px] min-w-0 flex-1 rounded-card border-[0.5px] border-white/10 bg-ink-700 px-5 py-[18px]">
-        <div className="mb-4 flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2.5">
-            <span className="font-display text-base font-bold text-fg">Scene {scene.n}</span>
-            <span className="rounded-full border-[0.5px] border-white/10 bg-white/5 px-2.5 py-[3px] font-ui text-[11.5px] font-bold uppercase tracking-[0.03em] text-fg-muted">
-              {scene.phase}
-            </span>
-          </div>
-          <span className="inline-flex items-center gap-1.5 font-ui text-[12.5px] font-semibold text-fg-subtle">
+      <div className="min-w-0 flex-1 pb-6">
+        <div className="mb-3 flex items-center gap-2.5">
+          <span className="font-display text-[15px] font-bold text-fg">Scene {scene.n}</span>
+          <span className="rounded-full border-[0.5px] border-white/10 bg-white/5 px-2.5 py-[3px] font-ui text-[11px] font-bold uppercase tracking-[0.03em] text-fg-muted">
+            {scene.phase}
+          </span>
+          <span className="ml-auto inline-flex items-center gap-1.5 font-ui text-[12.5px] font-semibold text-fg-subtle">
             <Icons.clock size={13} />
             {scene.time}
           </span>
         </div>
-        <div className="grid grid-cols-1 gap-[18px] sm:grid-cols-2">
-          <ShotBlock icon="eye" label="Visual" accent="var(--color-sky)" text={scene.visual} />
-          <ShotBlock icon="message" label="Script" accent="var(--color-lime)" text={scene.script} />
+        <div className="grid gap-3 md:grid-cols-2">
+          <ShotCard icon="eye" label="Visual" accent="var(--color-sky)" text={scene.visual} />
+          <ShotCard icon="message" label="Script" accent="var(--color-lime)" text={scene.script} />
         </div>
       </div>
     </div>
@@ -94,47 +91,24 @@ function SceneCard({ scene, last }: { scene: Scene; last: boolean }) {
 function Storyboard({ scenes }: { scenes: readonly Scene[] }) {
   return (
     <div>
-      <h3 className="mb-[18px] font-display text-[21px] font-bold text-fg">Storyboard</h3>
+      <h3 className="mb-5 font-display text-[21px] font-bold text-fg">Storyboard</h3>
       {scenes.map((s, i) => (
-        <SceneCard key={s.n} scene={s} last={i === scenes.length - 1} />
+        <SceneBlock key={s.n} scene={s} last={i === scenes.length - 1} />
       ))}
     </div>
   );
 }
 
-function PostPreview({ body, platform }: { body: string; platform: string }) {
+/** Post detail — just the content, full width, no fake social engagement. */
+function PostContent({ body, platforms }: { body: string; platforms: Task["platforms"] }) {
   return (
     <div>
-      <h3 className="mb-[18px] font-display text-[21px] font-bold text-fg">Ready to post</h3>
-      <div className="max-w-[560px] rounded-card border-[0.5px] border-white/10 bg-ink-700 px-6 py-[22px]">
-        <div className="mb-3.5 flex items-center gap-3">
-          <span className="grid size-[42px] place-items-center rounded-full bg-gradient-to-br from-orange to-pink font-display text-sm font-bold text-white">
-            VP
-          </span>
-          <div>
-            <div className="font-ui text-[15px] font-bold text-fg">Vasya Pupkin</div>
-            <div className="font-ui text-[13px] text-fg-subtle">@vasya_pupkin · {platform}</div>
-          </div>
-          <span className="ml-auto rounded-full border-[0.5px] border-white/10 bg-white/5 px-2.5 py-1 font-ui text-[11px] font-bold text-fg-subtle">
-            Preview
-          </span>
-        </div>
-        <p className="mb-4 whitespace-pre-wrap font-ui text-[15.5px] leading-relaxed text-fg">
-          {body}
-        </p>
-        <div className="flex gap-6 border-t-[0.5px] border-white/10 pt-3.5 text-fg-subtle">
-          {[
-            { ic: <Icons.thumbsUp size={16} />, n: "128" },
-            { ic: <Icons.message size={16} />, n: "24" },
-            { ic: <Icons.refresh size={16} />, n: "12" },
-            { ic: <Icons.send size={16} />, n: "" },
-          ].map((a, i) => (
-            <span key={i} className="inline-flex items-center gap-1.5 font-ui text-[13px] font-semibold">
-              {a.ic}
-              {a.n}
-            </span>
-          ))}
-        </div>
+      <div className="mb-4 flex items-center justify-between gap-3">
+        <h3 className="font-display text-[21px] font-bold text-fg">Ready to post</h3>
+        <PlatformRow platforms={platforms} size={20} />
+      </div>
+      <div className="rounded-card border-[0.5px] border-white/10 bg-ink-700 p-6 md:p-8">
+        <p className="whitespace-pre-wrap font-ui text-[16px] leading-[1.75] text-fg">{body}</p>
       </div>
     </div>
   );
@@ -144,15 +118,15 @@ function Checklist({ steps }: { steps: readonly { t: string; d: string }[] }) {
   const [done, setDone] = useState<Record<number, boolean>>({});
   return (
     <div>
-      <h3 className="mb-[18px] font-display text-[21px] font-bold text-fg">Today's mission</h3>
-      <div className="flex max-w-[680px] flex-col gap-3.5">
+      <h3 className="mb-5 font-display text-[21px] font-bold text-fg">Today's mission</h3>
+      <div className="flex flex-col gap-3.5">
         {steps.map((s, i) => {
           const on = !!done[i];
           return (
             <button
               key={i}
               onClick={() => setDone((d) => ({ ...d, [i]: !d[i] }))}
-              className="flex items-start gap-4 rounded-card border-[0.5px] border-white/10 bg-ink-700 px-5 py-[18px] text-left transition-opacity"
+              className="flex items-start gap-4 rounded-card border-[0.5px] border-white/10 bg-ink-700 px-6 py-5 text-left transition-opacity"
               style={{ opacity: on ? 0.6 : 1 }}
             >
               <span
@@ -184,7 +158,7 @@ function Checklist({ steps }: { steps: readonly { t: string; d: string }[] }) {
 
 function IdeaCard() {
   return (
-    <div className="rounded-card border-[0.5px] border-white/10 bg-[radial-gradient(120%_140%_at_0%_0%,rgba(184,230,68,0.10),transparent_60%),rgba(255,255,255,0.05)] p-5">
+    <div className="rounded-card border-[0.5px] border-white/10 bg-[radial-gradient(120%_140%_at_0%_0%,rgba(184,230,68,0.10),transparent_60%),rgba(255,255,255,0.04)] p-5">
       <span className="inline-flex items-center gap-1.5 font-ui text-[11.5px] font-extrabold uppercase tracking-[0.04em] text-lime">
         <Icons.sparkle size={13} /> Idea of the day
       </span>
@@ -201,7 +175,7 @@ function Feedback() {
     return (
       <button
         onClick={() => setV(val)}
-        className="grid size-[52px] place-items-center rounded-full border-[0.5px] border-white/10 transition-all"
+        className="grid size-12 place-items-center rounded-full border-[0.5px] border-white/10 transition-all"
         style={{
           background: active
             ? up
@@ -211,7 +185,7 @@ function Feedback() {
           color: active ? (up ? "var(--color-teal)" : "var(--color-danger)") : "var(--color-fg-muted)",
         }}
       >
-        {up ? <Icons.thumbsUp size={21} /> : <Icons.thumbsDown size={21} />}
+        {up ? <Icons.thumbsUp size={19} /> : <Icons.thumbsDown size={19} />}
       </button>
     );
   };
@@ -223,7 +197,7 @@ function Feedback() {
       <p className="mb-4 font-ui text-[13px] leading-snug text-fg-subtle">
         {v ? "Your AI learns your style and writes better next time." : "Your feedback helps our AI match your style."}
       </p>
-      <div className="flex justify-center gap-[18px]">
+      <div className="flex justify-center gap-4">
         <Thumb val="down" up={false} />
         <Thumb val="up" up />
       </div>
@@ -282,13 +256,8 @@ export function TaskDetail({
   const cur = variants[vIdx] as (typeof variants)[number] | undefined;
   const format = over.format ?? task.formatName ?? "";
   const duration = over.duration ?? task.duration ?? "";
-  const platformLabel = kind === "video" ? "Instagram" : "Threads";
   const primaryText =
-    kind === "video"
-      ? (cur && "script" in cur ? cur.script : "")
-      : kind === "post"
-        ? (cur && "body" in cur ? cur.body : "")
-        : (cur && "body" in cur ? cur.body : "");
+    cur && "script" in cur ? cur.script : cur && "body" in cur ? cur.body : "";
   const copyLabel = kind === "video" ? "Copy script" : kind === "post" ? "Copy post" : "Copy notes";
 
   const doCopy = () => {
@@ -305,7 +274,7 @@ export function TaskDetail({
     setRegenOpen(false);
     setGen(true);
     setTimeout(() => {
-      setVIdx((i) => (i + 1) % Math.max(variants.length, 1));
+      setVIdx((idx) => (idx + 1) % Math.max(variants.length, 1));
       setOver({
         format: vals.format,
         duration: vals.length && /sec/.test(vals.length) ? vals.length : over.duration,
@@ -317,7 +286,8 @@ export function TaskDetail({
 
   let body: React.ReactNode = null;
   if (kind === "video" && cur && "scenes" in cur) body = <Storyboard scenes={cur.scenes} />;
-  else if (kind === "post" && cur && "body" in cur) body = <PostPreview body={cur.body} platform={platformLabel} />;
+  else if (kind === "post" && cur && "body" in cur)
+    body = <PostContent body={cur.body} platforms={task.platforms} />;
   else if (kind === "engage" && cur && "steps" in cur) body = <Checklist steps={cur.steps} />;
 
   return (
@@ -333,20 +303,18 @@ export function TaskDetail({
 
       <div className="mb-[26px]">
         <PlatformRow platforms={task.platforms} size={26} />
-        <h1 className="mb-3 mt-4 max-w-[760px] font-display text-[clamp(30px,3.2vw,42px)] font-bold leading-[1.12] tracking-[-0.011em] text-balance text-fg">
-          {task.title}
+        <h1 className="mb-3 mt-4 max-w-[820px] font-display text-[clamp(30px,3.2vw,42px)] font-bold leading-[1.1] tracking-[-0.011em] text-balance">
+          <span className="text-irid-h">{task.title}</span>
         </h1>
         <p className="max-w-[680px] font-ui text-[17px] leading-normal text-fg-muted">{task.desc}</p>
       </div>
       <div className="mb-[30px] h-px bg-white/10" />
 
-      <div className="flex flex-wrap items-start gap-10">
-        <div className="min-w-0 flex-[1_1_560px]">
+      <div className="flex flex-col gap-10 lg:flex-row lg:items-start">
+        <div className="min-w-0 flex-1">
           {kind === "video" && (
             <div className="mb-[18px] flex flex-wrap gap-2">
-              <MetaBadge icon={<Icons.film size={14} />}>
-                {task.formatEmoji} {format}
-              </MetaBadge>
+              <MetaBadge icon={<Icons.film size={14} />}>{format}</MetaBadge>
               <MetaBadge icon={<Icons.clock size={14} />}>{duration}</MetaBadge>
               {over.tone && <MetaBadge icon={<Icons.sliders size={14} />}>{over.tone}</MetaBadge>}
             </div>
@@ -362,9 +330,9 @@ export function TaskDetail({
             <AnimatePresence mode="wait">
               <motion.div
                 key={vIdx}
-                initial={{ opacity: 0, x: 18 }}
+                initial={{ opacity: 0, x: 16 }}
                 animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -18 }}
+                exit={{ opacity: 0, x: -16 }}
                 transition={{ duration: 0.22 }}
               >
                 {body}
@@ -374,7 +342,7 @@ export function TaskDetail({
           </div>
         </div>
 
-        <aside className="sticky top-0 flex max-w-[380px] flex-[1_1_320px] flex-col gap-[18px]">
+        <aside className="flex w-full shrink-0 flex-col gap-4 lg:sticky lg:top-2 lg:w-[360px]">
           <IdeaCard />
           <Feedback />
           <div className="flex flex-col gap-3">
