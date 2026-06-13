@@ -83,14 +83,14 @@ export function ContentPlanPage() {
         view={view}
         weekOffset={weekOffset}
         onView={setView}
-        onSelect={setSelected}
+        onSelect={(d) => { setSelected(d); if (view === "month") setView("week"); }}
         onPrevWeek={() => setWeekOffset((o) => Math.max(o - 1, -4))}
         onNextWeek={() => setWeekOffset((o) => Math.min(o + 1, 0))}
       />
 
-      {dayLayout}
+      {view !== "month" && dayLayout}
 
-      <LayoutSwitcher value={layout} onChange={setLayout} />
+      {view !== "month" && <LayoutSwitcher value={layout} onChange={setLayout} />}
       <Paywall open={paywallOpen} onOpenChange={setPaywallOpen} />
     </div>
   );

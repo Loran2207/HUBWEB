@@ -129,7 +129,7 @@ function MonthCell({
     <button
       onClick={onSelect}
       className={cn(
-        "relative flex min-h-[104px] flex-col overflow-hidden rounded-input border-[0.5px] p-3 text-left transition-colors",
+        "relative flex min-h-[156px] flex-col overflow-hidden rounded-input border-[0.5px] p-3 text-left transition-colors",
         limeSel
           ? "border-transparent bg-lime"
           : selected
@@ -142,7 +142,7 @@ function MonthCell({
       <div className="mb-2 flex items-center justify-between">
         <span
           className={cn(
-            "font-display text-base font-bold",
+            "font-display text-lg font-bold",
             limeSel ? "text-on-lime" : isToday ? "text-lime" : "text-fg",
           )}
         >
@@ -166,8 +166,8 @@ function MonthCell({
       {d.idea && (
         <span
           className={cn(
-            "line-clamp-3 font-ui text-[11.5px] font-medium leading-snug",
-            limeSel ? "text-on-lime/80" : isDone ? "text-fg-muted" : "text-fg-subtle",
+            "line-clamp-4 font-display text-[14px] font-semibold leading-snug",
+            limeSel ? "text-on-lime" : isDone ? "text-fg" : "text-fg-muted",
           )}
         >
           {d.idea}
