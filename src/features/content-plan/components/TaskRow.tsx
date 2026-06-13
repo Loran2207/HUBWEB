@@ -44,29 +44,23 @@ function Toggle({
   );
 }
 
-function TaskArt({ task }: { task: Task }) {
+/** Icon tile — the original glyph treatment, with a faint accent glow. */
+function TaskIcon({ task }: { task: Task }) {
   return (
-    <span className="relative grid size-[84px] shrink-0 place-items-center overflow-hidden rounded-[18px] border-[0.5px] border-white/10 bg-ink-800">
+    <span
+      className="relative grid size-[54px] shrink-0 place-items-center overflow-hidden rounded-[15px] border-[0.5px] border-white/10 bg-ink-800"
+      style={{ color: task.accent }}
+    >
       <span
         aria-hidden
         className="absolute inset-0"
         style={{
-          background: `radial-gradient(circle at 50% 42%, color-mix(in srgb, ${task.accent} 26%, transparent), transparent 70%)`,
+          background: `radial-gradient(circle at 50% 38%, color-mix(in srgb, ${task.accent} 22%, transparent), transparent 72%)`,
         }}
       />
-      {task.illo ? (
-        <img
-          src={`/illos/${task.illo}.webp`}
-          alt=""
-          aria-hidden
-          draggable={false}
-          className="relative size-[74px] object-contain drop-shadow-[0_8px_18px_rgba(0,0,0,0.45)]"
-        />
-      ) : (
-        <span className="relative" style={{ color: task.accent }}>
-          <TaskGlyph name={task.glyph} size={28} />
-        </span>
-      )}
+      <span className="relative">
+        <TaskGlyph name={task.glyph} size={24} />
+      </span>
     </span>
   );
 }
@@ -96,7 +90,7 @@ export function TaskRow({
         done && !readOnly && "opacity-80",
       )}
     >
-      <TaskArt task={task} />
+      <TaskIcon task={task} />
 
       <div className="min-w-0 flex-1">
         <h4
@@ -107,7 +101,7 @@ export function TaskRow({
         >
           {task.title}
         </h4>
-        <p className="mb-3.5 max-w-[660px] font-ui text-[14.5px] font-medium leading-normal text-fg-muted">
+        <p className="mb-3.5 max-w-[560px] font-ui text-[14.5px] font-medium leading-normal text-fg-muted">
           {task.desc}
         </p>
         <div className="flex items-center gap-3">
@@ -120,9 +114,17 @@ export function TaskRow({
         </div>
       </div>
 
-      <span className="hidden shrink-0 items-center gap-1.5 self-end whitespace-nowrap font-ui text-[13px] font-bold text-fg-subtle transition-colors group-hover:text-lime sm:inline-flex">
-        Open <Icons.chevronRight size={16} />
-      </span>
+      {/* open button — the prettier circular affordance from the mockups */}
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          onOpen(task);
+        }}
+        aria-label={`Open ${task.title}`}
+        className="grid size-10 shrink-0 place-items-center rounded-full border-[0.5px] border-white/10 bg-white/5 text-fg-subtle transition-all hover:bg-white/10 hover:text-lime group-hover:border-white/20"
+      >
+        <Icons.chevronRight size={18} />
+      </button>
 
       <Toggle done={done} readOnly={readOnly} onToggle={onToggle} />
     </div>

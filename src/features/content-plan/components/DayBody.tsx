@@ -22,7 +22,7 @@ const ALT_IDEAS = [
   },
 ];
 
-/** One section heading — shared by both blocks so they read as equivalent. */
+/** Shared heading — both blocks read as equivalent (eyebrow + big title). */
 function SectionHeading({
   eyebrow,
   accent,
@@ -41,8 +41,8 @@ function SectionHeading({
   dim?: boolean;
 }) {
   return (
-    <div className="mb-6">
-      <div className="mb-3.5 flex items-center gap-3">
+    <div className="mb-5">
+      <div className="mb-2 flex items-center gap-2.5">
         <span
           className="inline-flex items-center gap-1.5 font-ui text-[11.5px] font-extrabold uppercase tracking-[0.06em]"
           style={{ color: accent }}
@@ -54,7 +54,7 @@ function SectionHeading({
       </div>
       <h2
         className={cn(
-          "max-w-[680px] font-display text-[clamp(24px,2.4vw,32px)] font-bold leading-[1.12] text-balance transition-opacity duration-300",
+          "max-w-[640px] font-display text-[clamp(24px,2.4vw,32px)] font-bold leading-[1.1] text-balance transition-opacity duration-300",
           dim ? "text-fg/30" : "text-fg",
         )}
       >
@@ -63,7 +63,7 @@ function SectionHeading({
       {desc && (
         <p
           className={cn(
-            "mt-3 max-w-[600px] font-ui text-[15.5px] font-medium leading-relaxed transition-opacity duration-300",
+            "mt-2.5 max-w-[600px] font-ui text-[15.5px] font-medium leading-relaxed transition-opacity duration-300",
             dim ? "text-fg-muted/40" : "text-fg-muted",
           )}
         >
@@ -71,19 +71,6 @@ function SectionHeading({
         </p>
       )}
     </div>
-  );
-}
-
-function ProgressPill({ done, total }: { done: number; total: number }) {
-  return (
-    <span className="inline-flex items-center gap-2 rounded-full border-[0.5px] border-white/10 bg-white/5 py-1 pl-1.5 pr-3">
-      <span className="grid size-5 place-items-center rounded-full bg-lime/15 text-[10px] font-extrabold text-lime">
-        {done}
-      </span>
-      <span className="font-ui text-[12.5px] font-semibold text-fg-muted">
-        {done} / {total} done today
-      </span>
-    </span>
   );
 }
 
@@ -145,7 +132,7 @@ function GrowthSection({
   onOpen: (task: Task) => void;
 }) {
   return (
-    <div className="mt-10">
+    <div className="mt-9">
       <SectionHeading eyebrow={GROUPS[1].eyebrow} accent="var(--color-teal)" title={GROUPS[1].title} />
       <TaskList tasks={GROUPS[1].tasks} doneMap={doneMap} readOnly={readOnly} onToggle={onToggle} onOpen={onOpen} />
     </div>
@@ -157,7 +144,6 @@ export function DayBody({
   dayMeta,
   isToday,
   doneMap,
-  progress,
   onToggle,
   onOpen,
   onUnlock,
@@ -166,7 +152,6 @@ export function DayBody({
   dayMeta: MonthDay | undefined;
   isToday: boolean;
   doneMap: Record<string, boolean>;
-  progress: { done: number; total: number };
   onToggle: (id: string) => void;
   onOpen: (task: Task) => void;
   onUnlock: () => void;
@@ -192,14 +177,7 @@ export function DayBody({
           title={idea.title}
           desc={idea.desc}
           dim={spin}
-          right={
-            <>
-              <RegenButton onClick={regenerate} spinning={spin} />
-              <span className="ml-auto">
-                <ProgressPill done={progress.done} total={progress.total} />
-              </span>
-            </>
-          }
+          right={<RegenButton onClick={regenerate} spinning={spin} />}
         />
         <TaskList tasks={GROUPS[0].tasks} doneMap={doneMap} readOnly={false} onToggle={onToggle} onOpen={onOpen} />
         <GrowthSection doneMap={doneMap} readOnly={false} onToggle={onToggle} onOpen={onOpen} />
@@ -211,12 +189,7 @@ export function DayBody({
     return (
       <div>
         <CompletedBanner date={selected} />
-        <SectionHeading
-          eyebrow="Idea of the day"
-          accent="var(--color-lime)"
-          icon
-          title={dayMeta.idea ?? ""}
-        />
+        <SectionHeading eyebrow="Idea of the day" accent="var(--color-lime)" icon title={dayMeta.idea ?? ""} />
         <TaskList tasks={GROUPS[0].tasks} doneMap={doneMap} readOnly onToggle={onToggle} onOpen={onOpen} />
         <GrowthSection doneMap={doneMap} readOnly onToggle={onToggle} onOpen={onOpen} />
       </div>

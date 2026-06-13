@@ -1,10 +1,16 @@
 import { useMemo, useState } from "react";
 import { ScreenHeader } from "@/components/ScreenHeader";
+import { DecorField } from "@/components/Decor";
 import {
   CalendarPanel,
   type CalendarView,
 } from "@/features/content-plan/components/Calendar";
 import { DayBody } from "@/features/content-plan/components/DayBody";
+import { SideRail } from "@/features/content-plan/components/SideRail";
+import {
+  LayoutSwitcher,
+  type Layout,
+} from "@/features/content-plan/components/LayoutSwitcher";
 import { TaskDetail } from "@/features/content-plan/components/TaskDetail";
 import { Paywall } from "@/features/content-plan/components/Paywall";
 import { MONTH, PLAN, type Task, weekFor } from "@/features/content-plan/data";
@@ -15,6 +21,7 @@ export function ContentPlanPage() {
   const [view, setView] = useState<CalendarView>("week");
   const [weekOffset, setWeekOffset] = useState(0);
   const [selected, setSelected] = useState(TODAY);
+  const [layout, setLayout] = useState<Layout>("focused");
   const [doneMap, setDoneMap] = useState<Record<string, boolean>>(() =>
     Object.fromEntries(PLAN.map((t) => [t.id, t.done])),
   );
@@ -24,7 +31,6 @@ export function ContentPlanPage() {
   const week = useMemo(() => weekFor(weekOffset), [weekOffset]);
   const dayMeta = MONTH.find((d) => d.date === selected);
   const isToday = selected === TODAY;
-  const progress = { done: PLAN.filter((t) => doneMap[t.id]).length, total: PLAN.length };
 
   const toggle = (id: string) => setDoneMap((m) => ({ ...m, [id]: !m[id] }));
 
@@ -34,6 +40,37 @@ export function ContentPlanPage() {
         <TaskDetail task={openTask} onBack={() => setOpenTask(null)} />
         <Paywall open={paywallOpen} onOpenChange={setPaywallOpen} />
       </>
+    );
+  }
+
+  const body = (
+    <DayBody
+      selected={selected}
+      dayMeta={dayMeta}
+      isToday={isToday}
+      doneMap={doneMap}
+      onToggle={toggle}
+      onOpen={setOpenTask}
+      onUnlock={() => setPaywallOpen(true)}
+    />
+  );
+
+  let dayLayout = body;
+  if (layout === "focused") {
+    dayLayout = (
+      <div className="relative">
+        <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-[42%] xl:block">
+          <DecorField />
+        </div>
+        <div className="relative max-w-[880px]">{body}</div>
+      </div>
+    );
+  } else if (layout === "rail") {
+    dayLayout = (
+      <div className="grid grid-cols-1 items-start gap-8 xl:grid-cols-[minmax(0,1fr)_360px]">
+        <div className="max-w-[880px]">{body}</div>
+        <SideRail onUnlock={() => setPaywallOpen(true)} />
+      </div>
     );
   }
 
@@ -59,17 +96,9 @@ export function ContentPlanPage() {
         onNextWeek={() => setWeekOffset((o) => Math.min(o + 1, 0))}
       />
 
-      <DayBody
-        selected={selected}
-        dayMeta={dayMeta}
-        isToday={isToday}
-        doneMap={doneMap}
-        progress={progress}
-        onToggle={toggle}
-        onOpen={setOpenTask}
-        onUnlock={() => setPaywallOpen(true)}
-      />
+      {dayLayout}
 
+      <LayoutSwitcher value={layout} onChange={setLayout} />
       <Paywall open={paywallOpen} onOpenChange={setPaywallOpen} />
     </div>
   );
