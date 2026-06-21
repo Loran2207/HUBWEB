@@ -99,7 +99,7 @@ function Storyboard({ scenes }: { scenes: readonly Scene[] }) {
   );
 }
 
-/** Post detail — just the content, full width, no fake social engagement. */
+/** Post detail, just the content, full width, no fake social engagement. */
 function PostContent({ body, platforms }: { body: string; platforms: Task["platforms"] }) {
   return (
     <div>

@@ -3,8 +3,8 @@ import { cn } from "@/lib/cn";
 
 /**
  * Page hero. `accentWord` renders the trailing word in the iridescent gradient
- * (matches "Explore Templates"). `orb` bleeds the holographic banner off the
- * top-right, blended into the black canvas.
+ * (matches "Explore Templates"). `orb` bleeds the transparent holographic orb
+ * off the top-right of the black canvas.
  */
 export function ScreenHeader({
   title,
@@ -24,27 +24,21 @@ export function ScreenHeader({
   return (
     <div className="relative mb-9">
       {orb && (
-        <div className="pointer-events-none absolute -top-20 right-[-56px] z-0 hidden h-[340px] w-[720px] max-w-[58%] md:block">
+        <div className="pointer-events-none absolute -top-16 right-[-28px] z-0 hidden h-[360px] w-[600px] max-w-[50%] md:block">
           <img
             src="/hero/orb.webp"
             alt=""
             aria-hidden
-            className="size-full object-cover object-right"
-            style={{
-              mixBlendMode: "plus-lighter",
-              maskImage:
-                "radial-gradient(135% 130% at 100% 12%, #000 34%, transparent 72%)",
-              WebkitMaskImage:
-                "radial-gradient(135% 130% at 100% 12%, #000 34%, transparent 72%)",
-            }}
+            draggable={false}
+            className="size-full object-contain object-right-top"
           />
         </div>
       )}
       <div className="relative z-10 flex flex-wrap items-start gap-6">
-        <div className="min-w-0 flex-1 basis-[420px]">
+        <div className="min-w-0 flex-1 basis-[520px]">
           <h1
             className={cn(
-              "font-display font-bold leading-[1.04] tracking-[-0.015em] text-balance text-fg",
+              "font-display font-bold leading-[1.04] tracking-[-0.015em] text-fg",
               hero ? "text-[clamp(36px,4.4vw,56px)]" : "text-[clamp(26px,2.4vw,32px)]",
             )}
           >
@@ -59,7 +53,7 @@ export function ScreenHeader({
           {subtitle && (
             <p
               className={cn(
-                "mt-4 max-w-[560px] font-display font-normal leading-snug text-fg/70",
+                "mt-4 max-w-[760px] font-display font-normal leading-snug text-fg/70",
                 hero ? "text-[clamp(16px,1.5vw,20px)]" : "text-lg",
               )}
             >

@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 
 /**
  * Full-screen app frame: glass sidebar at left, flat content plane at right
- * (no boxed container around the content), ambient aurora glows behind — the
+ * (no boxed container around the content), ambient aurora glows behind, the
  * "richness engine" of the dark HUB WEB look (saturated blurred color on black).
  */
 export function AppShell({

@@ -20,7 +20,7 @@ function OtherScreen({ id }: { id: Exclude<NavId, "content-plan"> }) {
         </div>
         <p className="font-ui text-base leading-relaxed text-fg-muted">
           This area already exists in SMMHUB. This build focuses on the new{" "}
-          <strong className="text-lime">Content Plan</strong> experience — open it
+          <strong className="text-lime">Content Plan</strong> experience, open it
           from the top of the sidebar.
         </p>
       </div>

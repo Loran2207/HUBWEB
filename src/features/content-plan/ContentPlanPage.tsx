@@ -5,11 +5,6 @@ import {
   type CalendarView,
 } from "@/features/content-plan/components/Calendar";
 import { DayBody } from "@/features/content-plan/components/DayBody";
-import { SideRail } from "@/features/content-plan/components/SideRail";
-import {
-  LayoutSwitcher,
-  type Layout,
-} from "@/features/content-plan/components/LayoutSwitcher";
 import { TaskDetail } from "@/features/content-plan/components/TaskDetail";
 import { Paywall } from "@/features/content-plan/components/Paywall";
 import { MONTH, PLAN, type Task, weekFor } from "@/features/content-plan/data";
@@ -20,7 +15,6 @@ export function ContentPlanPage() {
   const [view, setView] = useState<CalendarView>("week");
   const [weekOffset, setWeekOffset] = useState(0);
   const [selected, setSelected] = useState(TODAY);
-  const [layout, setLayout] = useState<Layout>("focused");
   const [doneMap, setDoneMap] = useState<Record<string, boolean>>(() =>
     Object.fromEntries(PLAN.map((t) => [t.id, t.done])),
   );
@@ -74,34 +68,12 @@ export function ContentPlanPage() {
     );
   }
 
-  const body = (
-    <DayBody
-      selected={selected}
-      dayMeta={dayMeta}
-      isToday={isToday}
-      doneMap={doneMap}
-      onToggle={toggle}
-      onOpen={setOpenTask}
-      onUnlock={() => setPaywallOpen(true)}
-    />
-  );
-
-  let dayLayout = body;
-  if (layout === "rail") {
-    dayLayout = (
-      <div className="grid grid-cols-1 items-start gap-8 xl:grid-cols-[minmax(0,1fr)_360px]">
-        <div className="max-w-[880px]">{body}</div>
-        <SideRail onUnlock={() => setPaywallOpen(true)} />
-      </div>
-    );
-  }
-
   return (
     <div className={isMonth ? "flex h-full flex-col pb-2" : undefined}>
       <ScreenHeader
         title="Content"
         accentWord="Plan"
-        subtitle="Your daily roadmap to create, post and grow — one task at a time."
+        subtitle="Your daily roadmap to create, post and grow, one task at a time."
         hero
         orb
       />
@@ -122,8 +94,17 @@ export function ContentPlanPage() {
         onNextWeek={() => setWeekOffset((o) => Math.min(o + 1, 0))}
       />
 
-      {!isMonth && dayLayout}
-      {!isMonth && <LayoutSwitcher value={layout} onChange={setLayout} />}
+      {!isMonth && (
+        <DayBody
+          selected={selected}
+          dayMeta={dayMeta}
+          isToday={isToday}
+          doneMap={doneMap}
+          onToggle={toggle}
+          onOpen={setOpenTask}
+          onUnlock={() => setPaywallOpen(true)}
+        />
+      )}
       <Paywall open={paywallOpen} onOpenChange={setPaywallOpen} />
     </div>
   );

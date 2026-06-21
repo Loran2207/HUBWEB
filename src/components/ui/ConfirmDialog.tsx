@@ -26,7 +26,9 @@ export function ConfirmDialog({
         <span className="mx-auto mb-4 grid size-14 place-items-center rounded-full bg-lime/15 text-lime">
           {icon ?? <Icons.refresh size={24} />}
         </span>
-        <h2 className="font-display text-[22px] font-bold text-fg">{title}</h2>
+        <h2 className="font-display text-[22px] font-bold">
+          <span className="text-irid-h">{title}</span>
+        </h2>
         <p className="mx-auto mt-2.5 max-w-[320px] font-ui text-[14.5px] leading-relaxed text-fg-muted">
           {message}
         </p>

@@ -2,6 +2,17 @@ import { Icons, PlatformRow, TaskGlyph } from "@/components/icons";
 import { cn } from "@/lib/cn";
 import type { Task } from "@/features/content-plan/data";
 
+/**
+ * Accent CSS var to an rgb triple, so the card washes use plain rgba(). The
+ * html-to-design capture drops color-mix(), which is why these gradients did
+ * not transfer to Figma before.
+ */
+const ACCENT_RGB: Record<string, string> = {
+  "var(--color-lime)": "184, 230, 68",
+  "var(--color-sky)": "26, 178, 255",
+  "var(--color-teal)": "60, 198, 170",
+};
+
 function Toggle({
   done,
   readOnly,
@@ -45,6 +56,7 @@ function Toggle({
 }
 
 function TaskIcon({ task }: { task: Task }) {
+  const rgb = ACCENT_RGB[task.accent] ?? "184, 230, 68";
   return (
     <span
       className="relative grid size-12 shrink-0 place-items-center overflow-hidden rounded-[14px] border-[0.5px] border-white/10 bg-ink-800"
@@ -54,7 +66,7 @@ function TaskIcon({ task }: { task: Task }) {
         aria-hidden
         className="absolute inset-0"
         style={{
-          background: `radial-gradient(circle at 50% 38%, color-mix(in srgb, ${task.accent} 24%, transparent), transparent 72%)`,
+          background: `radial-gradient(circle at 50% 38%, rgba(${rgb}, 0.24), transparent 72%)`,
         }}
       />
       <span className="relative">
@@ -77,6 +89,7 @@ export function TaskRow({
   onToggle: () => void;
   onOpen: (task: Task) => void;
 }) {
+  const rgb = ACCENT_RGB[task.accent] ?? "184, 230, 68";
   return (
     <div
       role="button"
@@ -89,12 +102,12 @@ export function TaskRow({
         done && !readOnly && "opacity-80",
       )}
     >
-      {/* subtle accent gradient wash */}
+      {/* subtle accent gradient wash (plain rgba so it survives capture) */}
       <span
         aria-hidden
         className="pointer-events-none absolute inset-0"
         style={{
-          background: `linear-gradient(105deg, color-mix(in srgb, ${task.accent} 8%, transparent), transparent 44%)`,
+          background: `linear-gradient(105deg, rgba(${rgb}, 0.11), transparent 46%)`,
         }}
       />
 

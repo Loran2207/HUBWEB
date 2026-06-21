@@ -72,26 +72,17 @@ export function Paywall({
       onOpenChange={onOpenChange}
       title="SMMHUB Premium checkout"
       width={520}
-      className="bg-[radial-gradient(120%_80%_at_50%_0%,rgba(184,230,68,0.12),transparent_55%),var(--color-ink-800)]"
     >
       <div className="p-7">
-        <button
-          onClick={() => onOpenChange(false)}
-          aria-label="Close"
-          className="absolute right-[18px] top-[18px] grid size-[34px] place-items-center rounded-full border-[0.5px] border-white/10 bg-white/5 text-fg-muted transition-colors hover:bg-white/10"
-        >
-          <Icons.close size={16} />
-        </button>
-
         <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-lime px-3.5 py-1.5 font-ui text-xs font-extrabold uppercase tracking-wide text-on-lime">
           <BrandSvg name="crown" size={15} /> SMMHUB Premium
         </div>
 
-        <h2 className="mb-2 font-display text-[26px] font-bold leading-tight text-fg">
-          Unlock your whole month
+        <h2 className="mb-2 font-display text-[26px] font-bold leading-tight">
+          <span className="text-irid-h">Unlock your whole month</span>
         </h2>
         <p className="mb-5 font-ui text-[15px] leading-relaxed text-fg-muted">
-          Every day planned ahead — ideas, scripts and growth tasks, ready when you wake up.
+          Every day planned ahead, ideas, scripts and growth tasks, ready when you wake up.
         </p>
 
         <div className="mb-6 grid grid-cols-1 gap-2 sm:grid-cols-2">

@@ -125,7 +125,9 @@ export function RegenModal({
           <span className="grid size-9 place-items-center rounded-input bg-lime/15 text-lime">
             <Icons.wand size={18} />
           </span>
-          <h2 className="font-display text-[22px] font-bold text-fg">{cfg.title}</h2>
+          <h2 className="font-display text-[22px] font-bold">
+            <span className="text-irid-h">{cfg.title}</span>
+          </h2>
         </div>
         <p className="mb-6 font-ui text-sm leading-relaxed text-fg-muted">
           Tweak the inputs and the AI rewrites this task to match.

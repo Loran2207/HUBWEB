@@ -51,7 +51,7 @@ export function LockedDay({
           </h3>
           <p className="mb-5 font-ui text-[15.5px] leading-relaxed text-fg-muted">
             Your free plan covers today. Unlock the full month and we'll plan every day
-            ahead — ideas, scripts and growth tasks, ready when you wake up.
+            ahead, ideas, scripts and growth tasks, ready when you wake up.
           </p>
           {idea && (
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border-[0.5px] border-white/10 bg-white/5 px-3.5 py-2">

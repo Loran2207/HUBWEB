@@ -1,4 +1,4 @@
-// SMMHUB — Content Plan domain data. Ported from the mobile feature.
+// SMMHUB, Content Plan domain data. Ported from the mobile feature.
 // Logic preserved 1:1; presentation lives in the components.
 
 export type Platform = "instagram" | "tiktok" | "youtube" | "threads" | "x";
@@ -80,7 +80,7 @@ const TASK_VIDEO: Task = {
   formatName: "B-roll + voiceover",
   formatEmoji: "🎥",
   formatInfo:
-    "Record your narration first, then shoot supporting footage — hands, screens, objects, anything visual — and lay it over the voice in editing. No need to speak on camera.",
+    "Record your narration first, then shoot supporting footage, hands, screens, objects, anything visual, and lay it over the voice in editing. No need to speak on camera.",
 };
 
 const TASK_POST: Task = {
@@ -115,7 +115,7 @@ const TASK_ENGAGE: Task = {
 
 export const PLAN: readonly Task[] = [TASK_VIDEO, TASK_POST, TASK_ENGAGE];
 
-/** Exactly two home sections — no Create/Publish/Grow tags. */
+/** Exactly two home sections, no Create/Publish/Grow tags. */
 export const GROUPS: readonly PlanGroup[] = [
   {
     id: "today",
@@ -133,35 +133,35 @@ export const GROUPS: readonly PlanGroup[] = [
   },
 ];
 
-// Jan 2026 — Jan 1 is a Thursday, Jan 28 (Wed) is "today".
+// Jan 2026, Jan 1 is a Thursday, Jan 28 (Wed) is "today".
 export const FIRST_WEEKDAY = 4;
 
 const MONTH_IDEAS: Record<number, string> = {
-  1: "New year, new niche — introduce yourself in 15 seconds",
+  1: "New year, new niche, introduce yourself in 15 seconds",
   2: "3 myths beginners believe about going viral",
   3: "A day in my creator life",
-  4: "Rest day — save ideas for the week ahead",
+  4: "Rest day, save ideas for the week ahead",
   5: "5 hooks that stop the scroll in 2 seconds",
   6: "Turn one long video into a week of clips",
   7: "The one tool I can't create without",
   8: "What I'd tell my beginner self",
   9: "React to a trend in your niche",
   10: "Mistakes that quietly kill your reach",
-  11: "Rest day — recharge and reflect",
+  11: "Rest day, recharge and reflect",
   12: "Your origin story in 30 seconds",
   13: "A quick win your audience can copy today",
   14: "Myth vs reality in your field",
   15: "Show your process, start to finish",
   16: "The 2-minute habit that builds focus",
   17: "Answer your 3 most-asked questions",
-  18: "Rest day — plan the week ahead",
+  18: "Rest day, plan the week ahead",
   19: "Before & after of your work",
   20: "A hot take your niche needs to hear",
   21: "Behind the scenes of your setup",
   22: "Recommend 3 creators worth following",
   23: "Tell a small failure and its lesson",
   24: "Tutorials that take only 20 seconds",
-  25: "Rest day — save ideas for the week ahead",
+  25: "Rest day, save ideas for the week ahead",
   26: "5 hooks that stop the scroll in 2 seconds",
   27: "Turn one long video into a week of clips",
   28: IDEA.title,
@@ -190,7 +190,7 @@ export const MONTH: readonly MonthDay[] = Array.from({ length: 31 }, (_, i) => {
 
 const DOW = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] as const;
 
-/** Build a 7-day strip. offset 0 = the week containing "today" (Jan 25–31). */
+/** Build a 7-day strip. offset 0 = the week containing "today" (Jan 25-31). */
 export function weekFor(offset: number): readonly WeekDay[] {
   const sunday = 25 + offset * 7;
   return DOW.map((dow, i) => {

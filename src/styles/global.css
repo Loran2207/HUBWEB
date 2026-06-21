@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* ============================================================
-   FONTS — real Gilroy (self-hosted), Montserrat (wordmark, via <link>)
+   FONTS, real Gilroy (self-hosted), Montserrat (wordmark, via <link>)
    ============================================================ */
 @font-face {
   font-family: "Gilroy";
@@ -54,7 +54,7 @@
 }
 
 /* ============================================================
-   DESIGN TOKENS — extracted from the real HUB WEB Figma
+   DESIGN TOKENS, extracted from the real HUB WEB Figma
    (NOT the prototype CSS; values corrected against the file)
    ============================================================ */
 @theme {
@@ -64,7 +64,7 @@
   --font-logo: "Montserrat", "Gilroy", system-ui, sans-serif;
   --font-user: "Helvetica Neue", Arial, sans-serif;
 
-  /* core neutrals — dark is canonical */
+  /* core neutrals, dark is canonical */
   --color-canvas: #000000;
   --color-ink-900: #0a0a0a;
   --color-ink-800: #141414;
@@ -83,7 +83,7 @@
   --color-lime: #b8e644;
   --color-lime-600: #a6d52f;
   --color-lime-700: #93c020;
-  --color-blue: #00a6ff; /* real "Unlock" blue — NOT #2377f8 */
+  --color-blue: #00a6ff; /* real "Unlock" blue, NOT #2377f8 */
   --color-purple: #c34dff;
   --color-purple-700: #752e99;
   --color-sky: #1ab2ff;

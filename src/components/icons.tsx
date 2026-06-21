@@ -23,6 +23,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import type { GlyphName, Platform } from "@/features/content-plan/data";
+import { BRAND_SVGS } from "@/components/brand-svgs";
 
 export const Icons = {
   check: Check,
@@ -59,7 +60,11 @@ export function TaskGlyph({ name, size = 24 }: { name: GlyphName; size?: number 
   return <Glyph size={size} strokeWidth={1.9} />;
 }
 
-/** Renders an exact brand SVG exported from Figma (lives in /public/icons). */
+/**
+ * Renders a brand glyph as INLINE SVG (the exact Figma vector lives in
+ * /public/icons and is embedded in brand-svgs.ts). Inline svg is captured by
+ * html-to-design as real vectors, not a rasterized <img>.
+ */
 export function BrandSvg({
   name,
   size = 18,
@@ -69,26 +74,29 @@ export function BrandSvg({
   size?: number;
   className?: string;
 }) {
+  const svg = BRAND_SVGS[name];
+  if (!svg) return null;
   return (
-    <img
-      src={`/icons/${name}.svg`}
-      alt=""
+    <span
       aria-hidden
-      draggable={false}
       className={className}
-      style={{ width: size, height: size, objectFit: "contain" }}
+      style={{ display: "inline-flex", width: size, height: size, lineHeight: 0 }}
+      dangerouslySetInnerHTML={{ __html: svg }}
     />
   );
 }
 
-/** SMMHUB "S" wordmark glyph — exact Figma vector (metallic white gradient). */
+const LOGO_RATIO = 17.6484 / 30.9297;
+
+/** SMMHUB "S" wordmark glyph (exact Figma vector, metallic white gradient). */
 export function LogoMark({ size = 28 }: { size?: number }) {
+  const svg = BRAND_SVGS["logo-s"];
+  if (!svg) return null;
   return (
-    <img
-      src="/icons/logo-s.svg"
-      alt="SMMHUB"
-      draggable={false}
-      style={{ height: size, width: "auto", display: "block" }}
+    <span
+      aria-hidden
+      style={{ display: "inline-flex", height: size, width: size * LOGO_RATIO, lineHeight: 0 }}
+      dangerouslySetInnerHTML={{ __html: svg }}
     />
   );
 }

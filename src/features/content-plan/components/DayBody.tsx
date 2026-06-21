@@ -15,7 +15,7 @@ const ALT_IDEAS = [
   { title: IDEA.title, desc: IDEA.desc },
   {
     title: "The 2-minute rule that builds any habit",
-    desc: "Break a goal into a version so small it feels silly to skip — then show how it snowballs over a week.",
+    desc: "Break a goal into a version so small it feels silly to skip, then show how it snowballs over a week.",
   },
   {
     title: "Why your phone is sabotaging your focus",
@@ -54,7 +54,7 @@ function SectionHeading({
       </div>
       <h2
         className={cn(
-          "max-w-[640px] font-display text-[clamp(24px,2.4vw,32px)] font-bold leading-[1.1] text-balance transition-opacity duration-300",
+          "max-w-[860px] font-display text-[clamp(24px,2.4vw,32px)] font-bold leading-[1.15] transition-opacity duration-300",
           dim ? "text-fg/30" : "text-fg",
         )}
       >
@@ -63,7 +63,7 @@ function SectionHeading({
       {desc && (
         <p
           className={cn(
-            "mt-2.5 max-w-[600px] font-ui text-[15.5px] font-medium leading-relaxed transition-opacity duration-300",
+            "mt-3 max-w-[760px] font-ui text-[15.5px] font-medium leading-relaxed transition-opacity duration-300",
             dim ? "text-fg-muted/40" : "text-fg-muted",
           )}
         >
