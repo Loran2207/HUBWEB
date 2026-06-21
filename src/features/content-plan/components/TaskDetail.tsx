@@ -61,28 +61,20 @@ function ShotCard({
 /** One scene = two parts split into a Visual card + a Script card. */
 function SceneBlock({ scene, last }: { scene: Scene; last: boolean }) {
   return (
-    <div className="flex gap-5">
-      <div className="flex flex-col items-center">
-        <span className="z-[1] grid size-9 shrink-0 place-items-center rounded-full border-[0.5px] border-white/10 bg-ink-800 font-display text-[14px] font-bold text-fg">
+    <div className={last ? "" : "mb-6"}>
+      <div className="mb-3 flex items-center gap-3">
+        <span className="grid size-9 shrink-0 place-items-center rounded-full border-[0.5px] border-white/10 bg-ink-800 font-display text-[14px] font-bold text-fg">
           {scene.n}
         </span>
-        {!last && <span className="mt-1 w-px flex-1 bg-white/15" />}
+        <span className="font-display text-[16px] font-bold text-fg">Scene {scene.n}</span>
+        <span className="ml-auto inline-flex items-center gap-1.5 font-ui text-[12.5px] font-semibold text-fg-subtle">
+          <Icons.clock size={13} />
+          {scene.time}
+        </span>
       </div>
-      <div className="min-w-0 flex-1 pb-6">
-        <div className="mb-3 flex items-center gap-2.5">
-          <span className="font-display text-[15px] font-bold text-fg">Scene {scene.n}</span>
-          <span className="rounded-full border-[0.5px] border-white/10 bg-white/5 px-2.5 py-[3px] font-ui text-[11px] font-bold uppercase tracking-[0.03em] text-fg-muted">
-            {scene.phase}
-          </span>
-          <span className="ml-auto inline-flex items-center gap-1.5 font-ui text-[12.5px] font-semibold text-fg-subtle">
-            <Icons.clock size={13} />
-            {scene.time}
-          </span>
-        </div>
-        <div className="grid gap-3 md:grid-cols-2">
-          <ShotCard icon="eye" label="Visual" accent="var(--color-sky)" text={scene.visual} />
-          <ShotCard icon="message" label="Script" accent="var(--color-lime)" text={scene.script} />
-        </div>
+      <div className="grid gap-3 pl-12 md:grid-cols-2">
+        <ShotCard icon="eye" label="Visual" accent="var(--color-sky)" text={scene.visual} />
+        <ShotCard icon="message" label="Script" accent="var(--color-lime)" text={scene.script} />
       </div>
     </div>
   );

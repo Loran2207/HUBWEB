@@ -48,24 +48,24 @@ function Field({
     );
   }
   if (field.type === "select") {
+    const opts = field.options ?? [];
+    const cur = value || opts[0] || "";
+    const cycle = () => {
+      const i = opts.indexOf(cur);
+      onChange(opts[(i + 1) % Math.max(opts.length, 1)] ?? cur);
+    };
     return (
       <FieldShell label={field.label}>
-        <div className="relative">
-          <select
-            value={value}
-            onChange={(e) => onChange(e.target.value)}
-            className="w-full appearance-none rounded-input border-[0.5px] border-white/10 bg-tile px-4 py-3 pr-10 font-ui text-[15px] text-fg outline-none transition-colors focus:border-lime/50"
-          >
-            {field.options?.map((opt) => (
-              <option key={opt} value={opt} className="bg-ink-800 text-fg">
-                {opt}
-              </option>
-            ))}
-          </select>
-          <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 -rotate-90 text-fg-subtle">
+        <button
+          type="button"
+          onClick={cycle}
+          className="flex w-full items-center justify-between rounded-input border-[0.5px] border-white/10 bg-tile px-4 py-3 text-left font-ui text-[15px] transition-colors hover:border-white/25"
+        >
+          <span className={cur ? "text-fg" : "text-fg-faint"}>{cur || field.placeholder || "Select"}</span>
+          <span className="rotate-90 text-fg-subtle">
             <Icons.chevronRight size={16} />
           </span>
-        </div>
+        </button>
       </FieldShell>
     );
   }

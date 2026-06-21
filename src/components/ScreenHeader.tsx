@@ -2,9 +2,8 @@ import type { ReactNode } from "react";
 import { cn } from "@/lib/cn";
 
 /**
- * Page hero. `accentWord` renders the trailing word in the iridescent gradient
- * (matches "Explore Templates"). `orb` bleeds the transparent holographic orb
- * off the top-right of the black canvas.
+ * Page hero. The whole title renders in the iridescent gradient; `orb` bleeds
+ * the transparent holographic orb off the top-right of the black canvas.
  */
 export function ScreenHeader({
   title,
@@ -21,6 +20,7 @@ export function ScreenHeader({
   orb?: boolean;
   right?: ReactNode;
 }) {
+  const fullTitle = accentWord ? `${title} ${accentWord}` : title;
   return (
     <div className="relative mb-9">
       {orb && (
@@ -38,17 +38,11 @@ export function ScreenHeader({
         <div className="min-w-0 flex-1 basis-[520px]">
           <h1
             className={cn(
-              "font-display font-bold leading-[1.04] tracking-[-0.015em] text-fg",
+              "font-display font-bold leading-[1.04] tracking-[-0.015em]",
               hero ? "text-[clamp(36px,4.4vw,56px)]" : "text-[clamp(26px,2.4vw,32px)]",
             )}
           >
-            {title}
-            {accentWord && (
-              <>
-                {" "}
-                <span className="text-irid-h">{accentWord}</span>
-              </>
-            )}
+            <span className="text-irid-h">{fullTitle}</span>
           </h1>
           {subtitle && (
             <p
