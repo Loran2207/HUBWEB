@@ -2,7 +2,29 @@ import { Icons, PlatformRow, TaskGlyph } from "@/components/icons";
 import { SkeletonLines } from "@/components/ui/Skeleton";
 import { GROUPS, IDEA, type Task } from "@/features/content-plan/data";
 
-/** A task card with its body still streaming in (title + platforms known, body shimmering). */
+/** Slim progress bar shown while the AI builds the plan, pinned just under the calendar. */
+function ProgressBar({ percent }: { percent: number }) {
+  return (
+    <div className="mb-7 rounded-card border-[0.5px] border-white/10 bg-ink-800/80 px-5 py-4">
+      <div className="mb-2.5 flex items-center justify-between">
+        <span className="inline-flex items-center gap-2 font-ui text-[14px] font-bold text-lime">
+          <span className="cp-spin grid place-items-center">
+            <Icons.refresh size={16} />
+          </span>
+          Generating content...
+        </span>
+        <span className="font-display text-[15px] font-extrabold tabular-nums text-fg">{percent}%</span>
+      </div>
+      <div className="h-2 overflow-hidden rounded-full bg-white/10">
+        <div
+          className="h-full rounded-full"
+          style={{ width: percent + "%", background: "linear-gradient(90deg, var(--color-lime), var(--color-teal))" }}
+        />
+      </div>
+    </div>
+  );
+}
+
 function GenCard({ task }: { task: Task }) {
   return (
     <div className="relative mb-4 overflow-hidden rounded-card border-[0.5px] border-white/10 bg-ink-700 p-5">
@@ -23,10 +45,11 @@ function GenCard({ task }: { task: Task }) {
   );
 }
 
-/** The Today layout while the AI streams the day's content, with a progress bar pinned low. */
+/** Today layout while the AI streams the day's content. */
 export function GeneratingBody({ percent = 20 }: { percent?: number }) {
   return (
     <div className="relative pb-6">
+      <ProgressBar percent={percent} />
       <div className="mb-5">
         <span className="inline-flex items-center gap-1.5 font-ui text-[11.5px] font-extrabold uppercase tracking-[0.06em] text-lime">
           <Icons.sparkle size={13} /> Idea of the day
@@ -49,24 +72,6 @@ export function GeneratingBody({ percent = 20 }: { percent?: number }) {
       {GROUPS[1].tasks.map((t) => (
         <GenCard key={t.id} task={t} />
       ))}
-
-      <div className="sticky bottom-3 mt-8 rounded-card border-[0.5px] border-white/10 bg-ink-800/90 px-5 py-4 backdrop-blur">
-        <div className="mb-2.5 flex items-center justify-between">
-          <span className="inline-flex items-center gap-2 font-ui text-[14px] font-bold text-lime">
-            <span className="cp-spin grid place-items-center">
-              <Icons.refresh size={16} />
-            </span>
-            Generating content...
-          </span>
-          <span className="font-display text-[15px] font-extrabold tabular-nums text-fg">{percent}%</span>
-        </div>
-        <div className="h-2 overflow-hidden rounded-full bg-white/10">
-          <div
-            className="h-full rounded-full"
-            style={{ width: percent + "%", background: "linear-gradient(90deg, var(--color-lime), var(--color-teal))" }}
-          />
-        </div>
-      </div>
     </div>
   );
 }

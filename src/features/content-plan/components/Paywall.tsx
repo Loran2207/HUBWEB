@@ -71,11 +71,17 @@ export function Paywall({
       open={open}
       onOpenChange={onOpenChange}
       title="SMMHUB Premium checkout"
-      width={520}
+      width={600}
     >
       <div className="p-7">
-        <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-lime px-3.5 py-1.5 font-ui text-xs font-extrabold uppercase tracking-wide text-on-lime">
-          <BrandSvg name="crown" size={15} /> SMMHUB Premium
+        <div className="mb-5 flex items-center gap-3 rounded-card border-[0.5px] border-white/10 bg-[linear-gradient(100deg,rgba(78,231,255,0.16),rgba(184,230,68,0.14))] px-4 py-3">
+          <span className="grid size-10 shrink-0 place-items-center rounded-full bg-lime/20 text-lime">
+            <BrandSvg name="crown" size={18} />
+          </span>
+          <div className="min-w-0">
+            <div className="font-display text-[15.5px] font-bold text-fg">SMMHUB Premium</div>
+            <div className="font-ui text-[12.5px] text-fg-muted">Everything to plan, create and grow</div>
+          </div>
         </div>
 
         <h2 className="mb-2 font-display text-[26px] font-bold leading-tight">

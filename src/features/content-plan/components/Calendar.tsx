@@ -178,7 +178,7 @@ function MonthGrid({
           </span>
         ))}
       </div>
-      <div className={cn("grid grid-cols-7 gap-2.5", fill && "min-h-0 flex-1 auto-rows-fr")}>
+      <div className={cn("grid grid-cols-7 gap-2.5 auto-rows-[minmax(158px,auto)]", fill && "min-h-0 flex-1")}>
         {Array.from({ length: FIRST_WEEKDAY }).map((_, i) => (
           <span key={`pad-${i}`} />
         ))}

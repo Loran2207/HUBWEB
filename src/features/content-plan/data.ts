@@ -130,28 +130,28 @@ const MONTH_IDEAS: Record<number, string> = {
   1: "New year, new niche, introduce yourself in 15 seconds",
   2: "3 myths beginners believe about going viral",
   3: "A day in my creator life",
-  4: "Rest day, save ideas for the week ahead",
+  4: "Batch 3 ideas you can film this week",
   5: "5 hooks that stop the scroll in 2 seconds",
   6: "Turn one long video into a week of clips",
   7: "The one tool I can't create without",
   8: "What I'd tell my beginner self",
   9: "React to a trend in your niche",
   10: "Mistakes that quietly kill your reach",
-  11: "Rest day, recharge and reflect",
+  11: "The mistake that quietly kills most reels",
   12: "Your origin story in 30 seconds",
   13: "A quick win your audience can copy today",
   14: "Myth vs reality in your field",
   15: "Show your process, start to finish",
   16: "The 2-minute habit that builds focus",
   17: "Answer your 3 most-asked questions",
-  18: "Rest day, plan the week ahead",
+  18: "Plan next week in 10 minutes",
   19: "Before & after of your work",
   20: "A hot take your niche needs to hear",
   21: "Behind the scenes of your setup",
   22: "Recommend 3 creators worth following",
   23: "Tell a small failure and its lesson",
   24: "Tutorials that take only 20 seconds",
-  25: "Rest day, save ideas for the week ahead",
+  25: "Repurpose your best post into a short video",
   26: "5 hooks that stop the scroll in 2 seconds",
   27: "Turn one long video into a week of clips",
   28: IDEA.title,
@@ -160,7 +160,7 @@ const MONTH_IDEAS: Record<number, string> = {
   31: "Prototyping tools for rapid iteration",
 };
 
-const REST_DAYS = new Set([4, 11, 18, 25]);
+const REST_DAYS = new Set<number>([]);
 const TODAY = 28;
 
 export const MONTH: readonly MonthDay[] = Array.from({ length: 31 }, (_, i) => {

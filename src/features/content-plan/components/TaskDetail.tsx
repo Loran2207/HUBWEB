@@ -154,8 +154,8 @@ function Checklist({ steps }: { steps: readonly { t: string; d: string }[] }) {
   );
 }
 
-function Feedback() {
-  const [v, setV] = useState<"up" | "down" | null>(null);
+function Feedback({ initial }: { initial?: "up" | "down" }) {
+  const [v, setV] = useState<"up" | "down" | null>(initial ?? null);
   const Thumb = ({ val, up }: { val: "up" | "down"; up: boolean }) => {
     const active = v === val;
     return (
@@ -226,11 +226,13 @@ export function TaskDetail({
   onBack,
   forceRegen = false,
   loading = false,
+  initialFeedback,
 }: {
   task: Task;
   onBack: () => void;
   forceRegen?: boolean;
   loading?: boolean;
+  initialFeedback?: "up" | "down";
 }) {
   const kind = task.kind;
   const variants = VARIANTS[kind] ?? [];
@@ -332,7 +334,7 @@ export function TaskDetail({
         </div>
 
         <aside className="flex w-full shrink-0 flex-col gap-4 lg:sticky lg:top-2 lg:w-[360px]">
-          <Feedback />
+          <Feedback initial={initialFeedback} />
           <div className="flex flex-col gap-3">
             <Button
               variant="primary"

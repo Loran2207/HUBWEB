@@ -1,93 +1,64 @@
-import { Icons } from "@/components/icons";
+import { CalendarPanel } from "@/features/content-plan/components/Calendar";
 import { Button } from "@/components/ui/Button";
-import { MONTH, MONTH_LABEL, type MonthDay } from "@/features/content-plan/data";
+import { Icons } from "@/components/icons";
+import { MONTH, weekFor } from "@/features/content-plan/data";
 
 const INCLUDED = [
-  { icon: "sparkle" as const, text: "Daily viral content ideas" },
-  { icon: "film" as const, text: "Professional video scripts" },
-  { icon: "edit" as const, text: "Ready-to-post micro posts" },
+  { icon: "sparkle" as const, text: "Daily viral ideas" },
+  { icon: "film" as const, text: "Video scripts" },
+  { icon: "edit" as const, text: "Ready-to-post copy" },
 ];
 
-function IncludedIcon({ name }: { name: "sparkle" | "film" | "edit" }) {
-  if (name === "film") return <Icons.film size={16} />;
-  if (name === "edit") return <Icons.edit size={16} />;
-  return <Icons.sparkle size={16} />;
-}
-
-function DayRow({ d, ready, last }: { d: MonthDay; ready: boolean; last: boolean }) {
+function Chip({ name, text }: { name: "sparkle" | "film" | "edit"; text: string }) {
+  const Ic = name === "film" ? Icons.film : name === "edit" ? Icons.edit : Icons.sparkle;
   return (
-    <div className="flex gap-4">
-      <div className="flex flex-col items-center pt-1">
-        <span className="grid size-11 shrink-0 place-items-center rounded-full border-[0.5px] border-white/10 bg-ink-800 font-display text-[15px] font-bold leading-none text-fg">
-          {d.date}
-        </span>
-        {!last && <span className="mt-1.5 w-px flex-1 bg-white/12" />}
-      </div>
-      <div className="min-w-0 flex-1 pb-5">
-        <div className="rounded-card border-[0.5px] border-white/10 bg-ink-700 p-4">
-          <p className="mb-2 font-display text-[16px] font-bold leading-snug text-fg">{d.idea}</p>
-          {ready ? (
-            <span className="inline-flex items-center gap-1.5 font-ui text-[13px] font-semibold text-teal">
-              <Icons.check size={14} strokeWidth={2.6} /> Content generated and ready
-            </span>
-          ) : (
-            <span className="inline-flex items-center gap-1.5 font-ui text-[13px] font-semibold text-fg-subtle">
-              <span className="cp-spin grid place-items-center">
-                <Icons.refresh size={13} />
-              </span>
-              Content generation in progress...
-            </span>
-          )}
-        </div>
-      </div>
-    </div>
+    <span className="inline-flex items-center gap-1.5 rounded-full border-[0.5px] border-white/10 bg-white/5 px-3 py-1.5 font-ui text-[12.5px] font-semibold text-fg">
+      <span className="text-lime"><Ic size={14} /></span>
+      {text}
+    </span>
   );
 }
 
-/** Celebratory reveal after the AI finishes building the plan. */
+/** Celebratory reveal: a fresh-plan header on top of the month calendar grid. */
 export function PlanReady({ onGo }: { onGo?: () => void }) {
-  const today = MONTH.find((d) => d.status === "today");
-  const base = today?.date ?? 28;
-  const upcoming = MONTH.filter((d) => d.date > base && d.idea).slice(0, 3);
-  const rows = [today, ...upcoming].filter(Boolean) as MonthDay[];
+  const week = weekFor(0);
   return (
-    <div className="mx-auto max-w-[760px] pb-10">
-      <div className="relative mb-7 overflow-hidden rounded-card border-[0.5px] border-white/10 bg-[radial-gradient(120%_120%_at_50%_0%,rgba(184,230,68,0.12),transparent_60%)] px-6 py-9 text-center">
-        <span className="mx-auto mb-4 grid size-14 place-items-center rounded-full bg-lime/15 text-lime">
-          <Icons.sparkle size={26} />
-        </span>
-        <h1 className="font-display text-[clamp(26px,3vw,38px)] font-extrabold italic leading-tight">
-          <span className="text-irid-h">Your Content Plan is ready</span>
-        </h1>
-      </div>
-
-      <div className="mb-7 rounded-card border-[0.5px] border-white/10 bg-white/[0.03] p-5">
-        <div className="mb-3 font-ui text-[12.5px] font-semibold text-fg-subtle">What is included</div>
-        <div className="grid gap-2.5 sm:grid-cols-3">
-          {INCLUDED.map((f) => (
-            <div
-              key={f.text}
-              className="flex items-center gap-2.5 rounded-input border-[0.5px] border-white/10 bg-white/5 px-3 py-2.5"
-            >
-              <span className="text-lime">
-                <IncludedIcon name={f.icon} />
-              </span>
-              <span className="font-ui text-[13px] font-semibold text-fg">{f.text}</span>
+    <div>
+      <div className="relative mb-7 overflow-hidden rounded-card border-[0.5px] border-white/10 bg-[radial-gradient(130%_140%_at_0%_0%,rgba(78,231,255,0.14),transparent_55%),radial-gradient(120%_130%_at_100%_0%,rgba(184,230,68,0.12),transparent_55%)] px-7 py-7">
+        <div className="flex flex-wrap items-center justify-between gap-5">
+          <div className="min-w-0">
+            <span className="inline-flex items-center gap-1.5 font-ui text-[11.5px] font-extrabold uppercase tracking-[0.08em] text-lime">
+              <Icons.sparkle size={13} /> Plan ready
+            </span>
+            <h1 className="mt-2 font-display text-[clamp(30px,3.4vw,46px)] font-extrabold leading-[1.05] tracking-[-0.012em]">
+              <span className="text-irid-h">Your Content Plan is ready</span>
+            </h1>
+            <p className="mt-3 max-w-[620px] font-ui text-[16px] leading-relaxed text-fg-muted">
+              The whole month is planned ahead. Ideas, scripts and growth tasks, ready when you wake up.
+            </p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {INCLUDED.map((f) => (
+                <Chip key={f.text} name={f.icon} text={f.text} />
+              ))}
             </div>
-          ))}
+          </div>
+          <Button variant="primary" size="lg" onClick={onGo} leftIcon={<Icons.sparkle size={18} />}>
+            Let us go
+          </Button>
         </div>
       </div>
 
-      <div className="mb-3 font-display text-[20px] font-bold text-fg">{MONTH_LABEL}</div>
-      <div className="mb-8">
-        {rows.map((d, i) => (
-          <DayRow key={d.date} d={d} ready={d.status === "today"} last={i === rows.length - 1} />
-        ))}
-      </div>
-
-      <Button variant="primary" size="lg" full onClick={onGo} leftIcon={<Icons.sparkle size={18} />}>
-        Let us go
-      </Button>
+      <CalendarPanel
+        week={week}
+        month={MONTH}
+        selected={28}
+        view="month"
+        weekOffset={0}
+        onView={() => {}}
+        onSelect={() => {}}
+        onPrevWeek={() => {}}
+        onNextWeek={() => {}}
+      />
     </div>
   );
 }

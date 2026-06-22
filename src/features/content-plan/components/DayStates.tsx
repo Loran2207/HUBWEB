@@ -1,35 +1,6 @@
 import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/Button";
 
-export function RestDay({ date }: { date: number }) {
-  return (
-    <div className="grid place-items-center pb-2 pt-5">
-      <div className="w-full max-w-[560px] text-center">
-        <div className="mb-4 text-[46px]">🌙</div>
-        <h3 className="mb-2 font-display text-2xl font-bold text-fg">Rest day</h3>
-        <p className="font-ui text-base leading-relaxed text-fg-muted">
-          No tasks for Jan {date}. Recharge, save ideas, and come back tomorrow ready
-          to create. Consistency beats burnout.
-        </p>
-      </div>
-    </div>
-  );
-}
-
-export function CompletedBanner({ date }: { date: number }) {
-  return (
-    <div className="mb-6 inline-flex items-center gap-3 rounded-full border border-teal/35 bg-teal/10 py-2.5 pl-3 pr-[18px]">
-      <span className="grid size-[26px] place-items-center rounded-full bg-teal text-[#06231c]">
-        <Icons.check size={15} strokeWidth={2.6} />
-      </span>
-      <span className="font-ui text-[14.5px] font-bold text-fg">All done on Jan {date}</span>
-      <span className="font-ui text-sm font-medium text-fg-muted">
-        · open any task to review what you posted
-      </span>
-    </div>
-  );
-}
-
 export function LockedDay({
   date,
   idea,

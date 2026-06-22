@@ -4,11 +4,7 @@ import { Icons } from "@/components/icons";
 import { cn } from "@/lib/cn";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { TaskRow } from "@/features/content-plan/components/TaskRow";
-import {
-  CompletedBanner,
-  LockedDay,
-  RestDay,
-} from "@/features/content-plan/components/DayStates";
+import { LockedDay } from "@/features/content-plan/components/DayStates";
 import { GROUPS, IDEA, type MonthDay, type Task } from "@/features/content-plan/data";
 
 const ALT_IDEAS = [
@@ -202,7 +198,6 @@ export function DayBody({
   if (dayMeta?.status === "done") {
     return (
       <div>
-        <CompletedBanner date={selected} />
         <SectionHeading eyebrow="Idea of the day" accent="var(--color-lime)" icon title={dayMeta.idea ?? ""} />
         <TaskList tasks={GROUPS[0].tasks} doneMap={doneMap} readOnly onToggle={onToggle} onOpen={onOpen} />
         <GrowthSection doneMap={doneMap} readOnly onToggle={onToggle} onOpen={onOpen} />
@@ -210,6 +205,5 @@ export function DayBody({
     );
   }
 
-  if (dayMeta?.status === "rest") return <RestDay date={selected} />;
   return <LockedDay date={selected} idea={dayMeta?.idea ?? null} onUnlock={onUnlock} />;
 }

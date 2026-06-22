@@ -30,6 +30,7 @@ export function ContentPlanPage() {
   const [paywallOpen, setPaywallOpen] = useState(false);
   const [special, setSpecial] = useState<Special>(null);
   const [coachStep, setCoachStep] = useState(0);
+  const [initialFb, setInitialFb] = useState<"up" | "down" | undefined>(undefined);
 
   // Deep-link each state for design capture: /?state=video|month|generating|...
   useEffect(() => {
@@ -41,16 +42,18 @@ export function ContentPlanPage() {
     setDetailLoading(false);
     setSpecial(null);
     setCoachStep(0);
+    setInitialFb(undefined);
     if (s === "month") setView("month");
-    else if (s === "completed") {
-      setView("week");
-      setSelected(26);
-    } else if (s === "rest") {
-      setView("week");
-      setSelected(25);
-    } else if (s === "video") setOpenTask(PLAN[0]);
+    else if (s === "video") setOpenTask(PLAN[0]);
     else if (s === "post") setOpenTask(PLAN[1]);
     else if (s === "engage") setOpenTask(PLAN[2]);
+    else if (s === "liked") {
+      setOpenTask(PLAN[1]);
+      setInitialFb("up");
+    } else if (s === "disliked") {
+      setOpenTask(PLAN[1]);
+      setInitialFb("down");
+    }
     else if (s === "videoload") {
       setOpenTask(PLAN[0]);
       setDetailLoading(true);
@@ -90,6 +93,7 @@ export function ContentPlanPage() {
           onBack={() => setOpenTask(null)}
           forceRegen={forceRegen}
           loading={detailLoading}
+          initialFeedback={initialFb}
         />
         <Paywall open={paywallOpen} onOpenChange={setPaywallOpen} />
       </>
