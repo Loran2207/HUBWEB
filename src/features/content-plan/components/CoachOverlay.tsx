@@ -24,7 +24,9 @@ const STEPS = [
   },
 ];
 
-/** Onboarding spotlight: dims the screen and highlights one element with a tooltip. */
+const SCRIM = "absolute bg-black/75";
+
+/** Onboarding spotlight: dims the screen with four bands and highlights one element. */
 export function CoachOverlay({ step, onNext }: { step: number; onNext: () => void }) {
   const cfg = STEPS[step - 1];
   const [rect, setRect] = useState<DOMRect | null>(null);
@@ -33,7 +35,7 @@ export function CoachOverlay({ step, onNext }: { step: number; onNext: () => voi
     const measure = () => {
       const el = document.querySelector('[data-coach="' + cfg.sel + '"]');
       if (el) {
-        el.scrollIntoView({ block: "center" });
+        el.scrollIntoView({ block: "nearest" });
         setRect(el.getBoundingClientRect());
       }
     };
@@ -59,16 +61,15 @@ export function CoachOverlay({ step, onNext }: { step: number; onNext: () => voi
 
   return (
     <div className="fixed inset-0 z-[60]">
-      <div
+      <span className={SCRIM + " inset-x-0 top-0"} style={{ height: Math.max(box.top, 0) }} />
+      <span className={SCRIM + " inset-x-0 bottom-0"} style={{ top: box.top + box.height }} />
+      <span className={SCRIM + " left-0"} style={{ top: box.top, width: Math.max(box.left, 0), height: box.height }} />
+      <span className={SCRIM + " right-0"} style={{ top: box.top, left: box.left + box.width, height: box.height }} />
+      <span
         className="absolute rounded-card ring-2 ring-lime/70"
-        style={{
-          top: box.top,
-          left: box.left,
-          width: box.width,
-          height: box.height,
-          boxShadow: "0 0 0 9999px rgba(0,0,0,0.74)",
-        }}
+        style={{ top: box.top, left: box.left, width: box.width, height: box.height }}
       />
+
       <div
         className="absolute w-[336px] rounded-card border-[0.5px] border-white/12 bg-ink-800 p-5"
         style={{ top: tipTop, left: tipLeft }}
