@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { Icons, PlatformRow } from "@/components/icons";
 import { Button } from "@/components/ui/Button";
 import { RegenModal } from "@/features/content-plan/components/RegenModal";
+import { DetailSkeleton } from "@/features/content-plan/components/DetailSkeleton";
 import { type Task } from "@/features/content-plan/data";
 import { VARIANTS, type Scene } from "@/features/content-plan/task-content";
 
@@ -224,10 +225,12 @@ export function TaskDetail({
   task,
   onBack,
   forceRegen = false,
+  loading = false,
 }: {
   task: Task;
   onBack: () => void;
   forceRegen?: boolean;
+  loading?: boolean;
 }) {
   const kind = task.kind;
   const variants = VARIANTS[kind] ?? [];
@@ -270,7 +273,8 @@ export function TaskDetail({
   };
 
   let body: React.ReactNode = null;
-  if (kind === "video" && cur && "scenes" in cur) body = <Storyboard scenes={cur.scenes} />;
+  if (loading) body = <DetailSkeleton kind={kind} />;
+  else if (kind === "video" && cur && "scenes" in cur) body = <Storyboard scenes={cur.scenes} />;
   else if (kind === "post" && cur && "body" in cur)
     body = <PostContent body={cur.body} platforms={task.platforms} />;
   else if (kind === "engage" && cur && "steps" in cur) body = <Checklist steps={cur.steps} />;

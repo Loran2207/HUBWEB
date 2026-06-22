@@ -7,9 +7,14 @@ import {
 import { DayBody } from "@/features/content-plan/components/DayBody";
 import { TaskDetail } from "@/features/content-plan/components/TaskDetail";
 import { Paywall } from "@/features/content-plan/components/Paywall";
+import { GeneratingBody } from "@/features/content-plan/components/GeneratingState";
+import { NextPlanTimer } from "@/features/content-plan/components/NextPlanTimer";
+import { PlanReady } from "@/features/content-plan/components/PlanReady";
+import { LockedPlanBody } from "@/features/content-plan/components/LockedPlan";
 import { MONTH, PLAN, type Task, weekFor } from "@/features/content-plan/data";
 
 const TODAY = 28;
+type Special = "generating" | "timer" | "planready" | "locked" | null;
 
 export function ContentPlanPage() {
   const [view, setView] = useState<CalendarView>("week");
@@ -20,32 +25,43 @@ export function ContentPlanPage() {
   );
   const [openTask, setOpenTask] = useState<Task | null>(null);
   const [forceRegen, setForceRegen] = useState(false);
+  const [detailLoading, setDetailLoading] = useState(false);
   const [paywallOpen, setPaywallOpen] = useState(false);
+  const [special, setSpecial] = useState<Special>(null);
 
-  // Deep-link each state for design capture: /?state=video|month|paywall|...
+  // Deep-link each state for design capture: /?state=video|month|generating|...
   useEffect(() => {
     const s = new URLSearchParams(window.location.search).get("state");
     if (!s) return;
     setOpenTask(null);
     setPaywallOpen(false);
     setForceRegen(false);
+    setDetailLoading(false);
+    setSpecial(null);
     if (s === "month") setView("month");
     else if (s === "completed") {
       setView("week");
       setSelected(26);
-    } else if (s === "locked") {
-      setView("week");
-      setSelected(29);
     } else if (s === "rest") {
       setView("week");
       setSelected(25);
     } else if (s === "video") setOpenTask(PLAN[0]);
     else if (s === "post") setOpenTask(PLAN[1]);
     else if (s === "engage") setOpenTask(PLAN[2]);
-    else if (s === "regen") {
+    else if (s === "videoload") {
+      setOpenTask(PLAN[0]);
+      setDetailLoading(true);
+    } else if (s === "postload") {
+      setOpenTask(PLAN[1]);
+      setDetailLoading(true);
+    } else if (s === "regen") {
       setOpenTask(PLAN[0]);
       setForceRegen(true);
     } else if (s === "paywall") setPaywallOpen(true);
+    else if (s === "generating") setSpecial("generating");
+    else if (s === "timer") setSpecial("timer");
+    else if (s === "planready") setSpecial("planready");
+    else if (s === "locked") setSpecial("locked");
     else {
       setView("week");
       setSelected(TODAY);
@@ -62,11 +78,18 @@ export function ContentPlanPage() {
   if (openTask) {
     return (
       <>
-        <TaskDetail task={openTask} onBack={() => setOpenTask(null)} forceRegen={forceRegen} />
+        <TaskDetail
+          task={openTask}
+          onBack={() => setOpenTask(null)}
+          forceRegen={forceRegen}
+          loading={detailLoading}
+        />
         <Paywall open={paywallOpen} onOpenChange={setPaywallOpen} />
       </>
     );
   }
+
+  if (special === "planready") return <PlanReady onGo={() => setSpecial(null)} />;
 
   return (
     <div className={isMonth ? "flex h-full flex-col pb-2" : undefined}>
@@ -94,7 +117,12 @@ export function ContentPlanPage() {
         onNextWeek={() => setWeekOffset((o) => Math.min(o + 1, 0))}
       />
 
-      {!isMonth && (
+      {!isMonth && special === "generating" && <GeneratingBody percent={20} />}
+      {!isMonth && special === "timer" && <NextPlanTimer />}
+      {!isMonth && special === "locked" && (
+        <LockedPlanBody endedOn="Aug 26" onRenew={() => setPaywallOpen(true)} />
+      )}
+      {!isMonth && !special && (
         <DayBody
           selected={selected}
           dayMeta={dayMeta}
