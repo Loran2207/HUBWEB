@@ -146,31 +146,32 @@ export const VARIANTS: Variants = {
 
 export const REGEN: Record<TaskKind, RegenConfig> = {
   video: {
-    title: "Regenerate video script",
-    cta: "Regenerate script",
+    title: "Regenerate script",
+    cta: "Confirm & Regenerate",
     fields: [
-      { key: "topic", type: "textarea", label: "Topic / idea", placeholder: "What is the video about?", value: "From zero to reading habit in 7 minutes a day" },
-      { key: "format", type: "select", label: "Format", options: ["B-roll + voiceover", "Talking head", "Text on screen", "Tutorial / how-to"] },
-      { key: "length", type: "segment", label: "Length", options: ["15 sec", "30 sec", "60 sec"] },
-      { key: "tone", type: "select", label: "Tone of voice", options: ["Friendly", "Bold", "Educational", "Inspirational"] },
+      { key: "requests", type: "textarea", label: "Requests for improvement", placeholder: "Make shorter" },
+      { key: "format", type: "segment", label: "Format", options: ["Talking head", "Voice-over + B-roll"], value: "Talking head" },
+      { key: "duration", type: "segment", label: "Duration", options: ["30 sec", "1 min", "1.5 min", "2 min"], value: "1.5 min" },
+      { key: "tone", type: "select", label: "Tone of voice", options: ["Friendly", "Bold", "Educational", "Inspirational"], value: "Friendly" },
+      { key: "cta", type: "textarea", label: "Call to Action", placeholder: "What do you want viewers to do? e.g. Follow for more tips, or Save this for later." },
     ],
   },
   post: {
     title: "Regenerate post",
-    cta: "Regenerate post",
+    cta: "Confirm & Regenerate",
     fields: [
-      { key: "topic", type: "textarea", label: "Topic / idea", placeholder: "What should the post say?", value: "From zero to reading habit in 7 minutes a day" },
-      { key: "length", type: "segment", label: "Length", options: ["Short", "Medium", "Long"] },
-      { key: "tone", type: "select", label: "Tone of voice", options: ["Friendly", "Bold", "Educational", "Inspirational"] },
+      { key: "requests", type: "textarea", label: "Requests for improvement", placeholder: "Make shorter" },
+      { key: "tone", type: "select", label: "Tone of voice", options: ["Friendly", "Bold", "Educational", "Inspirational"], value: "Friendly" },
+      { key: "purpose", type: "select", label: "Content purpose", placeholder: "Select content purpose", options: ["Educate", "Entertain", "Inspire", "Promote"], value: "" },
+      { key: "cta", type: "textarea", label: "Call to Action", placeholder: "What do you want viewers to do? e.g. Follow for more tips, or Save this for later." },
     ],
   },
   engage: {
-    title: "Regenerate growth task",
-    cta: "Regenerate task",
+    title: "Regenerate task",
+    cta: "Confirm & Regenerate",
     fields: [
-      { key: "niche", type: "text", label: "Your niche", placeholder: "e.g. Books & productivity", value: "Books & productivity" },
-      { key: "count", type: "segment", label: "How many creators", options: ["3", "5", "10"] },
-      { key: "tone", type: "select", label: "Comment style", options: ["Friendly", "Curious", "Bold", "Supportive"] },
+      { key: "requests", type: "textarea", label: "Requests for improvement", placeholder: "Make shorter" },
+      { key: "tone", type: "select", label: "Comment style", options: ["Friendly", "Curious", "Bold", "Supportive"], value: "Friendly" },
     ],
   },
 };

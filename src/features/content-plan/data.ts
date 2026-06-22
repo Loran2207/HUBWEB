@@ -18,11 +18,9 @@ export interface Task {
   readonly id: string;
   readonly illo?: string;
   readonly kind: TaskKind;
-  readonly step: string;
   readonly glyph: GlyphName;
   /** CSS custom-property reference, e.g. "var(--color-lime)". */
   readonly accent: string;
-  readonly eta: string;
   readonly title: string;
   readonly desc: string;
   readonly platforms: readonly Platform[];
@@ -30,7 +28,6 @@ export interface Task {
   readonly done: boolean;
   readonly duration?: string;
   readonly formatName?: string;
-  readonly formatEmoji?: string;
   readonly formatInfo?: string;
 }
 
@@ -67,18 +64,15 @@ const TASK_VIDEO: Task = {
   id: "video",
   illo: "video",
   kind: "video",
-  step: "Create",
   glyph: "film",
   accent: "var(--color-lime)",
-  eta: "≈ 20 min",
   title: "Create & post a short video",
   desc: "Use today's ready-made script to film your video and post it on Instagram, TikTok, and YouTube Shorts.",
   platforms: ["instagram", "tiktok", "youtube"],
   format: "Talking Head",
   done: true,
-  duration: "15 sec",
-  formatName: "B-roll + voiceover",
-  formatEmoji: "🎥",
+  duration: "1.5 min",
+  formatName: "Talking head",
   formatInfo:
     "Record your narration first, then shoot supporting footage, hands, screens, objects, anything visual, and lay it over the voice in editing. No need to speak on camera.",
 };
@@ -87,10 +81,8 @@ const TASK_POST: Task = {
   id: "post",
   illo: "post",
   kind: "post",
-  step: "Publish",
   glyph: "edit",
   accent: "var(--color-sky)",
-  eta: "≈ 5 min",
   title: "Publish a micro post",
   desc: "Copy today's pre-written post and share it on Threads and X to keep your feed alive between videos.",
   platforms: ["threads", "x"],
@@ -102,10 +94,8 @@ const TASK_ENGAGE: Task = {
   id: "engage",
   illo: "engage",
   kind: "engage",
-  step: "Grow",
   glyph: "message",
   accent: "var(--color-teal)",
-  eta: "≈ 10 min",
   title: "Engage with 3 creators",
   desc: "Find three creators in your niche and leave a few meaningful comments on their recent posts to grow your reach.",
   platforms: ["threads", "x"],

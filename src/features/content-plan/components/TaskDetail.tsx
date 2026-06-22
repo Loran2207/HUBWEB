@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { Icons, PlatformRow } from "@/components/icons";
 import { Button } from "@/components/ui/Button";
 import { RegenModal } from "@/features/content-plan/components/RegenModal";
-import { IDEA, type Task } from "@/features/content-plan/data";
+import { type Task } from "@/features/content-plan/data";
 import { VARIANTS, type Scene } from "@/features/content-plan/task-content";
 
 function IconButton({
@@ -153,18 +153,6 @@ function Checklist({ steps }: { steps: readonly { t: string; d: string }[] }) {
   );
 }
 
-function IdeaCard() {
-  return (
-    <div className="rounded-card border-[0.5px] border-white/10 bg-[radial-gradient(120%_140%_at_0%_0%,rgba(184,230,68,0.10),transparent_60%),rgba(255,255,255,0.04)] p-5">
-      <span className="inline-flex items-center gap-1.5 font-ui text-[11.5px] font-extrabold uppercase tracking-[0.04em] text-lime">
-        <Icons.sparkle size={13} /> Idea of the day
-      </span>
-      <h4 className="mb-2 mt-2.5 font-display text-lg font-bold leading-snug text-fg">{IDEA.title}</h4>
-      <p className="font-ui text-[13.5px] leading-relaxed text-fg-muted">{IDEA.desc}</p>
-    </div>
-  );
-}
-
 function Feedback() {
   const [v, setV] = useState<"up" | "down" | null>(null);
   const Thumb = ({ val, up }: { val: "up" | "down"; up: boolean }) => {
@@ -274,7 +262,7 @@ export function TaskDetail({
       setVIdx((idx) => (idx + 1) % Math.max(variants.length, 1));
       setOver({
         format: vals.format,
-        duration: vals.length && /sec/.test(vals.length) ? vals.length : over.duration,
+        duration: vals.duration ?? over.duration,
         tone: vals.tone,
       });
       setGen(false);
@@ -340,7 +328,6 @@ export function TaskDetail({
         </div>
 
         <aside className="flex w-full shrink-0 flex-col gap-4 lg:sticky lg:top-2 lg:w-[360px]">
-          <IdeaCard />
           <Feedback />
           <div className="flex flex-col gap-3">
             <Button

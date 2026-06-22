@@ -49,10 +49,10 @@ function Field({
   }
   if (field.type === "select") {
     const opts = field.options ?? [];
-    const cur = value || opts[0] || "";
+    const cur = value || "";
     const cycle = () => {
       const i = opts.indexOf(cur);
-      onChange(opts[(i + 1) % Math.max(opts.length, 1)] ?? cur);
+      onChange(opts[(i + 1) % Math.max(opts.length, 1)] ?? opts[0] ?? cur);
     };
     return (
       <FieldShell label={field.label}>
