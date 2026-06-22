@@ -31,6 +31,7 @@ function SectionHeading({
   desc,
   right,
   dim,
+  coach,
 }: {
   eyebrow: string;
   accent: string;
@@ -39,9 +40,10 @@ function SectionHeading({
   desc?: string;
   right?: ReactNode;
   dim?: boolean;
+  coach?: string;
 }) {
   return (
-    <div className="mb-5">
+    <div className="mb-5" data-coach={coach}>
       <div className="mb-2 flex items-center gap-2.5">
         <span
           className="inline-flex items-center gap-1.5 font-ui text-[11.5px] font-extrabold uppercase tracking-[0.06em]"
@@ -173,6 +175,7 @@ export function DayBody({
     return (
       <div>
         <SectionHeading
+          coach="idea"
           eyebrow="Idea of the day"
           accent="var(--color-lime)"
           icon

@@ -94,6 +94,7 @@ export function TaskRow({
     <div
       role="button"
       tabIndex={0}
+      data-coach={task.id}
       onClick={() => onOpen(task)}
       onKeyDown={(e) => e.key === "Enter" && onOpen(task)}
       className={cn(

@@ -11,10 +11,11 @@ import { GeneratingBody } from "@/features/content-plan/components/GeneratingSta
 import { NextPlanTimer } from "@/features/content-plan/components/NextPlanTimer";
 import { PlanReady } from "@/features/content-plan/components/PlanReady";
 import { LockedPlanBody } from "@/features/content-plan/components/LockedPlan";
+import { CoachOverlay } from "@/features/content-plan/components/CoachOverlay";
 import { MONTH, PLAN, type Task, weekFor } from "@/features/content-plan/data";
 
 const TODAY = 28;
-type Special = "generating" | "timer" | "planready" | "locked" | null;
+type Special = "generating" | "timer" | "planready" | "locked" | "coach" | null;
 
 export function ContentPlanPage() {
   const [view, setView] = useState<CalendarView>("week");
@@ -28,6 +29,7 @@ export function ContentPlanPage() {
   const [detailLoading, setDetailLoading] = useState(false);
   const [paywallOpen, setPaywallOpen] = useState(false);
   const [special, setSpecial] = useState<Special>(null);
+  const [coachStep, setCoachStep] = useState(0);
 
   // Deep-link each state for design capture: /?state=video|month|generating|...
   useEffect(() => {
@@ -38,6 +40,7 @@ export function ContentPlanPage() {
     setForceRegen(false);
     setDetailLoading(false);
     setSpecial(null);
+    setCoachStep(0);
     if (s === "month") setView("month");
     else if (s === "completed") {
       setView("week");
@@ -62,6 +65,10 @@ export function ContentPlanPage() {
     else if (s === "timer") setSpecial("timer");
     else if (s === "planready") setSpecial("planready");
     else if (s === "locked") setSpecial("locked");
+    else if (/^coach[1-4]$/.test(s)) {
+      setSpecial("coach");
+      setCoachStep(Number(s.slice(5)));
+    }
     else {
       setView("week");
       setSelected(TODAY);
@@ -122,7 +129,7 @@ export function ContentPlanPage() {
       {!isMonth && special === "locked" && (
         <LockedPlanBody endedOn="Aug 26" onRenew={() => setPaywallOpen(true)} />
       )}
-      {!isMonth && !special && (
+      {!isMonth && (!special || special === "coach") && (
         <DayBody
           selected={selected}
           dayMeta={dayMeta}
@@ -131,6 +138,12 @@ export function ContentPlanPage() {
           onToggle={toggle}
           onOpen={setOpenTask}
           onUnlock={() => setPaywallOpen(true)}
+        />
+      )}
+      {special === "coach" && coachStep > 0 && (
+        <CoachOverlay
+          step={coachStep}
+          onNext={() => (coachStep < 4 ? setCoachStep(coachStep + 1) : setSpecial(null))}
         />
       )}
       <Paywall open={paywallOpen} onOpenChange={setPaywallOpen} />
