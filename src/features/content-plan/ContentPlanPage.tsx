@@ -13,10 +13,11 @@ import { PlanReady } from "@/features/content-plan/components/PlanReady";
 import { LockedPlanBody } from "@/features/content-plan/components/LockedPlan";
 import { CoachOverlay } from "@/features/content-plan/components/CoachOverlay";
 import { NextPlanFooter } from "@/features/content-plan/components/NextPlanFooter";
+import { PlanGenerating } from "@/features/content-plan/components/PlanGenerating";
 import { MONTH, PLAN, type Task, weekFor } from "@/features/content-plan/data";
 
 const TODAY = 28;
-type Special = "generating" | "timer" | "planready" | "locked" | "coach" | "planahead" | null;
+type Special = "generating" | "timer" | "planready" | "locked" | "coach" | "planahead" | "plangen" | null;
 
 export function ContentPlanPage() {
   const [view, setView] = useState<CalendarView>("week");
@@ -73,6 +74,7 @@ export function ContentPlanPage() {
     else if (s === "paywall-paypal") { setPaywallOpen(true); setPwMethod("paypal"); }
     else if (s === "paywall-aurora") { setPaywallOpen(true); setPwVariant("aurora"); }
     else if (s === "planahead") { setView("month"); setSpecial("planahead"); }
+    else if (s === "plangen") { setView("month"); setSpecial("plangen"); }
     else if (s === "generating") setSpecial("generating");
     else if (s === "timer") setSpecial("timer");
     else if (s === "planready") setSpecial("planready");
@@ -110,6 +112,7 @@ export function ContentPlanPage() {
   }
 
   if (special === "planready") return <PlanReady onGo={() => setSpecial(null)} />;
+  if (special === "plangen") return <PlanGenerating />;
 
   return (
     <div className={isMonth ? "pb-2" : undefined}>

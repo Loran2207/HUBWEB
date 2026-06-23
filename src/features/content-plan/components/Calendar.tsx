@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Icons } from "@/components/icons";
+import { SkeletonBar } from "@/components/ui/Skeleton";
 import { cn } from "@/lib/cn";
 import {
   FIRST_WEEKDAY,
@@ -107,13 +108,17 @@ function MonthCell({
   d,
   selected,
   onSelect,
+  phase,
 }: {
   d: MonthDay;
   selected: boolean;
   onSelect: () => void;
+  phase?: "done" | "generated" | "generating";
 }) {
   const isToday = d.status === "today";
-  const isDone = d.status === "done";
+  const generating = phase === "generating";
+  const generated = phase === "generated";
+  const isDone = phase ? phase === "done" : d.status === "done";
   const limeSel = selected && isToday;
   return (
     <button
@@ -137,21 +142,39 @@ function MonthCell({
           <span className={cn("font-ui text-[10px] font-bold uppercase tracking-wide", limeSel ? "text-on-lime/70" : "text-lime")}>
             Today
           </span>
+        ) : generating ? (
+          <span className="cp-spin grid place-items-center text-fg-subtle">
+            <Icons.refresh size={13} />
+          </span>
+        ) : generated ? (
+          <span className="grid size-[18px] place-items-center rounded-full bg-lime/15 text-lime">
+            <Icons.sparkle size={11} />
+          </span>
         ) : isDone ? (
           <span className="grid size-[18px] place-items-center rounded-full bg-teal/15 text-teal">
             <Icons.check size={11} strokeWidth={2.6} />
           </span>
         ) : null}
       </div>
-      {d.idea && (
-        <span
-          className={cn(
-            "line-clamp-4 font-display text-[14px] font-semibold leading-snug",
-            limeSel ? "text-on-lime" : isDone ? "text-fg" : "text-fg-muted",
-          )}
-        >
-          {d.idea}
-        </span>
+      {generating ? (
+        <div className="flex flex-col gap-2">
+          <SkeletonBar w="92%" h={11} />
+          <SkeletonBar w="74%" h={11} />
+          <span className="mt-1 font-ui text-[11px] font-medium text-fg-faint">
+            Content generation in progress...
+          </span>
+        </div>
+      ) : (
+        d.idea && (
+          <span
+            className={cn(
+              "line-clamp-4 font-display text-[14px] font-semibold leading-snug",
+              limeSel ? "text-on-lime" : isDone ? "text-fg" : "text-fg-muted",
+            )}
+          >
+            {d.idea}
+          </span>
+        )
       )}
     </button>
   );
@@ -162,11 +185,13 @@ function MonthGrid({
   selected,
   onSelect,
   fill,
+  cellPhase,
 }: {
   month: readonly MonthDay[];
   selected: number;
   onSelect: (d: number) => void;
   fill?: boolean;
+  cellPhase?: (date: number, status: DayStatus) => "done" | "generated" | "generating" | undefined;
 }) {
   const dows = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   return (
@@ -183,7 +208,7 @@ function MonthGrid({
           <span key={`pad-${i}`} />
         ))}
         {month.map((d) => (
-          <MonthCell key={d.date} d={d} selected={selected === d.date} onSelect={() => onSelect(d.date)} />
+          <MonthCell key={d.date} d={d} selected={selected === d.date} onSelect={() => onSelect(d.date)} phase={cellPhase ? cellPhase(d.date, d.status) : undefined} />
         ))}
       </div>
     </div>
@@ -240,6 +265,7 @@ export function CalendarPanel({
   onPrevWeek,
   onNextWeek,
   fill,
+  cellPhase,
 }: {
   week: readonly WeekDay[];
   month: readonly MonthDay[];
@@ -251,6 +277,7 @@ export function CalendarPanel({
   onPrevWeek: () => void;
   onNextWeek: () => void;
   fill?: boolean;
+  cellPhase?: (date: number, status: DayStatus) => "done" | "generated" | "generating" | undefined;
 }) {
   const canPrev = view === "week" && weekOffset > -4;
   const canNext = view === "week" && weekOffset < 0;
@@ -279,7 +306,7 @@ export function CalendarPanel({
         {view === "week" ? (
           <WeekStrip week={week} selected={selected} onSelect={onSelect} />
         ) : (
-          <MonthGrid month={month} selected={selected} onSelect={onSelect} fill={fill} />
+          <MonthGrid month={month} selected={selected} onSelect={onSelect} fill={fill} cellPhase={cellPhase} />
         )}
       </div>
     </section>

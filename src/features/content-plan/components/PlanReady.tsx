@@ -58,6 +58,7 @@ export function PlanReady({ onGo }: { onGo?: () => void }) {
         onSelect={() => {}}
         onPrevWeek={() => {}}
         onNextWeek={() => {}}
+        cellPhase={() => "generated" as const}
       />
     </div>
   );
