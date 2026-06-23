@@ -6,16 +6,17 @@ import {
 } from "@/features/content-plan/components/Calendar";
 import { DayBody } from "@/features/content-plan/components/DayBody";
 import { TaskDetail } from "@/features/content-plan/components/TaskDetail";
-import { Paywall } from "@/features/content-plan/components/Paywall";
+import { Paywall, type Method, type PaywallVariant } from "@/features/content-plan/components/Paywall";
 import { GeneratingBody } from "@/features/content-plan/components/GeneratingState";
 import { NextPlanTimer } from "@/features/content-plan/components/NextPlanTimer";
 import { PlanReady } from "@/features/content-plan/components/PlanReady";
 import { LockedPlanBody } from "@/features/content-plan/components/LockedPlan";
 import { CoachOverlay } from "@/features/content-plan/components/CoachOverlay";
+import { NextPlanFooter } from "@/features/content-plan/components/NextPlanFooter";
 import { MONTH, PLAN, type Task, weekFor } from "@/features/content-plan/data";
 
 const TODAY = 28;
-type Special = "generating" | "timer" | "planready" | "locked" | "coach" | null;
+type Special = "generating" | "timer" | "planready" | "locked" | "coach" | "planahead" | null;
 
 export function ContentPlanPage() {
   const [view, setView] = useState<CalendarView>("week");
@@ -31,6 +32,8 @@ export function ContentPlanPage() {
   const [special, setSpecial] = useState<Special>(null);
   const [coachStep, setCoachStep] = useState(0);
   const [initialFb, setInitialFb] = useState<"up" | "down" | undefined>(undefined);
+  const [pwVariant, setPwVariant] = useState<PaywallVariant>("default");
+  const [pwMethod, setPwMethod] = useState<Method>("apple");
 
   // Deep-link each state for design capture: /?state=video|month|generating|...
   useEffect(() => {
@@ -43,6 +46,8 @@ export function ContentPlanPage() {
     setSpecial(null);
     setCoachStep(0);
     setInitialFb(undefined);
+    setPwVariant("default");
+    setPwMethod("apple");
     if (s === "month") setView("month");
     else if (s === "video") setOpenTask(PLAN[0]);
     else if (s === "post") setOpenTask(PLAN[1]);
@@ -64,6 +69,10 @@ export function ContentPlanPage() {
       setOpenTask(PLAN[0]);
       setForceRegen(true);
     } else if (s === "paywall") setPaywallOpen(true);
+    else if (s === "paywall-card") { setPaywallOpen(true); setPwMethod("card"); }
+    else if (s === "paywall-paypal") { setPaywallOpen(true); setPwMethod("paypal"); }
+    else if (s === "paywall-aurora") { setPaywallOpen(true); setPwVariant("aurora"); }
+    else if (s === "planahead") { setView("month"); setSpecial("planahead"); }
     else if (s === "generating") setSpecial("generating");
     else if (s === "timer") setSpecial("timer");
     else if (s === "planready") setSpecial("planready");
@@ -95,7 +104,7 @@ export function ContentPlanPage() {
           loading={detailLoading}
           initialFeedback={initialFb}
         />
-        <Paywall open={paywallOpen} onOpenChange={setPaywallOpen} />
+        <Paywall key={pwVariant + "-" + pwMethod} open={paywallOpen} onOpenChange={setPaywallOpen} variant={pwVariant} initialMethod={pwMethod} />
       </>
     );
   }
@@ -103,7 +112,7 @@ export function ContentPlanPage() {
   if (special === "planready") return <PlanReady onGo={() => setSpecial(null)} />;
 
   return (
-    <div className={isMonth ? "flex h-full flex-col pb-2" : undefined}>
+    <div className={isMonth ? "pb-2" : undefined}>
       <ScreenHeader
         title="Content"
         accentWord="Plan"
@@ -118,7 +127,7 @@ export function ContentPlanPage() {
         selected={selected}
         view={view}
         weekOffset={weekOffset}
-        fill={isMonth}
+        fill={false}
         onView={setView}
         onSelect={(d) => {
           setSelected(d);
@@ -127,6 +136,8 @@ export function ContentPlanPage() {
         onPrevWeek={() => setWeekOffset((o) => Math.max(o - 1, -4))}
         onNextWeek={() => setWeekOffset((o) => Math.min(o + 1, 0))}
       />
+
+      {isMonth && special === "planahead" && <NextPlanFooter />}
 
       {!isMonth && special === "generating" && <GeneratingBody percent={20} />}
       {!isMonth && special === "timer" && <NextPlanTimer />}
@@ -150,7 +161,7 @@ export function ContentPlanPage() {
           onNext={() => (coachStep < 4 ? setCoachStep(coachStep + 1) : setSpecial(null))}
         />
       )}
-      <Paywall open={paywallOpen} onOpenChange={setPaywallOpen} />
+      <Paywall key={pwVariant + "-" + pwMethod} open={paywallOpen} onOpenChange={setPaywallOpen} variant={pwVariant} initialMethod={pwMethod} />
     </div>
   );
 }

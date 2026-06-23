@@ -42,7 +42,7 @@ export function PlanReady({ onGo }: { onGo?: () => void }) {
               ))}
             </div>
           </div>
-          <Button variant="primary" size="lg" onClick={onGo} leftIcon={<Icons.sparkle size={18} />}>
+          <Button variant="primary" size="lg" className="min-w-[210px] px-9" onClick={onGo} leftIcon={<Icons.sparkle size={18} />}>
             Let us go
           </Button>
         </div>
