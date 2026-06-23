@@ -30,14 +30,14 @@ function Field({
   if (field.type === "segment") {
     return (
       <FieldShell label={field.label}>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex gap-2">
           {field.options?.map((opt) => (
             <button
               key={opt}
               type="button"
               onClick={() => onChange(opt)}
               className={cn(
-                "rounded-input border-[0.5px] px-3.5 py-2.5 font-ui text-[13.5px] font-semibold transition-colors",
+                "flex-1 rounded-input border-[0.5px] px-3 py-2.5 text-center font-ui text-[13.5px] font-semibold transition-colors",
                 value === opt
                   ? "border-transparent bg-lime text-on-lime"
                   : "border-white/10 bg-ink-800 text-fg hover:bg-white/10",
@@ -116,7 +116,8 @@ export function RegenModal({
 
   const requests = cfg.fields.find((f) => f.key === "requests");
   const cta = cfg.fields.find((f) => f.key === "cta");
-  const narrows = cfg.fields.filter((f) => f.type !== "textarea");
+  const segs = cfg.fields.filter((f) => f.type === "segment");
+  const sels = cfg.fields.filter((f) => f.type === "select");
 
   return (
     <Modal open={open} onOpenChange={onOpenChange} title={cfg.title} width={600}>
@@ -142,12 +143,19 @@ export function RegenModal({
             {requests && (
               <Field field={requests} value={values[requests.key] ?? ""} onChange={(v) => set(requests.key, v)} />
             )}
-            {narrows.length > 0 && (
+            {segs.map((f) => (
+              <Field key={f.key} field={f} value={values[f.key] ?? ""} onChange={(v) => set(f.key, v)} />
+            ))}
+            {sels.length >= 2 ? (
               <div className="grid grid-cols-1 gap-x-3 gap-y-4 sm:grid-cols-2">
-                {narrows.map((f) => (
+                {sels.map((f) => (
                   <Field key={f.key} field={f} value={values[f.key] ?? ""} onChange={(v) => set(f.key, v)} />
                 ))}
               </div>
+            ) : (
+              sels.map((f) => (
+                <Field key={f.key} field={f} value={values[f.key] ?? ""} onChange={(v) => set(f.key, v)} />
+              ))
             )}
             {cta && <Field field={cta} value={values[cta.key] ?? ""} onChange={(v) => set(cta.key, v)} />}
           </div>

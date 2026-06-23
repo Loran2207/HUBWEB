@@ -185,8 +185,13 @@ export function Paywall({
 
           {method === "card" && <CardFields />}
           {method === "paypal" && (
-            <div className="mb-5 flex items-center gap-2.5 rounded-input border-[0.5px] border-white/10 bg-ink-800 px-4 py-3 font-ui text-[13.5px] text-fg-muted">
-              <Icons.info size={16} /> You will be redirected to PayPal to finish securely.
+            <div className="mb-5">
+              <Labeled label="PayPal email">
+                <input className={FIELD} placeholder="you@email.com" />
+              </Labeled>
+              <div className="mt-2.5 flex items-center gap-2 font-ui text-[12.5px] text-fg-subtle">
+                <Icons.info size={14} /> You will be redirected to PayPal to confirm.
+              </div>
             </div>
           )}
 
